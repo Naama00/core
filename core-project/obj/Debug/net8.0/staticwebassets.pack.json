@@ -1,0 +1,41 @@
+{
+  "Files": [
+    {
+      "Id": "D:\\core\\wwwroot\\app.js",
+      "PackagePath": "staticwebassets\\app.js"
+    },
+    {
+      "Id": "D:\\core\\wwwroot\\core.code-workspace",
+      "PackagePath": "staticwebassets\\core.code-workspace"
+    },
+    {
+      "Id": "D:\\core\\wwwroot\\images\\stack-books-with-library-scene.jpg",
+      "PackagePath": "staticwebassets\\images\\stack-books-with-library-scene.jpg"
+    },
+    {
+      "Id": "D:\\core\\wwwroot\\index.html",
+      "PackagePath": "staticwebassets\\index.html"
+    },
+    {
+      "Id": "D:\\core\\wwwroot\\style.css",
+      "PackagePath": "staticwebassets\\style.css"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.build.core.props",
+      "PackagePath": "build\\core.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.buildMultiTargeting.core.props",
+      "PackagePath": "buildMultiTargeting\\core.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.buildTransitive.core.props",
+      "PackagePath": "buildTransitive\\core.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.core.Microsoft.AspNetCore.StaticWebAssets.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
+    }
+  ],
+  "ElementsToRemove": []
+}
