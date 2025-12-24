@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "0PhywTjfPIflLjjaMWbfeJTKwusY0weFvN7O1uy5dOY=",
+  "Hash": "2OjP2nfEyp8vtFMan88amifbPttkOvYyRokmLlAruzY=",
   "Source": "core",
   "BasePath": "_content/core",
   "Mode": "Default",
@@ -10,36 +10,17 @@
     {
       "Name": "core\\wwwroot",
       "Source": "core",
-      "ContentRoot": "D:\\core\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\Admin\\Documents\\GitHub\\core\\core-project\\wwwroot\\",
       "BasePath": "_content/core",
       "Pattern": "**"
     }
   ],
   "Assets": [
     {
-      "Identity": "D:\\core\\wwwroot\\app.js",
+      "Identity": "C:\\Users\\Admin\\Documents\\GitHub\\core\\core-project\\wwwroot\\core.code-workspace",
       "SourceId": "core",
       "SourceType": "Discovered",
-      "ContentRoot": "D:\\core\\wwwroot\\",
-      "BasePath": "_content/core",
-      "RelativePath": "app.js",
-      "AssetKind": "All",
-      "AssetMode": "All",
-      "AssetRole": "Primary",
-      "AssetMergeBehavior": "PreferTarget",
-      "AssetMergeSource": "",
-      "RelatedAsset": "",
-      "AssetTraitName": "",
-      "AssetTraitValue": "",
-      "CopyToOutputDirectory": "Never",
-      "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "wwwroot\\app.js"
-    },
-    {
-      "Identity": "D:\\core\\wwwroot\\core.code-workspace",
-      "SourceId": "core",
-      "SourceType": "Discovered",
-      "ContentRoot": "D:\\core\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\Admin\\Documents\\GitHub\\core\\core-project\\wwwroot\\",
       "BasePath": "_content/core",
       "RelativePath": "core.code-workspace",
       "AssetKind": "All",
@@ -55,10 +36,10 @@
       "OriginalItemSpec": "wwwroot\\core.code-workspace"
     },
     {
-      "Identity": "D:\\core\\wwwroot\\images\\stack-books-with-library-scene.jpg",
+      "Identity": "C:\\Users\\Admin\\Documents\\GitHub\\core\\core-project\\wwwroot\\images\\stack-books-with-library-scene.jpg",
       "SourceId": "core",
       "SourceType": "Discovered",
-      "ContentRoot": "D:\\core\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\Admin\\Documents\\GitHub\\core\\core-project\\wwwroot\\",
       "BasePath": "_content/core",
       "RelativePath": "images/stack-books-with-library-scene.jpg",
       "AssetKind": "All",
@@ -74,10 +55,10 @@
       "OriginalItemSpec": "wwwroot\\images\\stack-books-with-library-scene.jpg"
     },
     {
-      "Identity": "D:\\core\\wwwroot\\index.html",
+      "Identity": "C:\\Users\\Admin\\Documents\\GitHub\\core\\core-project\\wwwroot\\index.html",
       "SourceId": "core",
       "SourceType": "Discovered",
-      "ContentRoot": "D:\\core\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\Admin\\Documents\\GitHub\\core\\core-project\\wwwroot\\",
       "BasePath": "_content/core",
       "RelativePath": "index.html",
       "AssetKind": "All",
@@ -93,10 +74,48 @@
       "OriginalItemSpec": "wwwroot\\index.html"
     },
     {
-      "Identity": "D:\\core\\wwwroot\\style.css",
+      "Identity": "C:\\Users\\Admin\\Documents\\GitHub\\core\\core-project\\wwwroot\\js\\app.js",
       "SourceId": "core",
       "SourceType": "Discovered",
-      "ContentRoot": "D:\\core\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\Admin\\Documents\\GitHub\\core\\core-project\\wwwroot\\",
+      "BasePath": "_content/core",
+      "RelativePath": "js/app.js",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\js\\app.js"
+    },
+    {
+      "Identity": "C:\\Users\\Admin\\Documents\\GitHub\\core\\core-project\\wwwroot\\js\\user.js",
+      "SourceId": "core",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\Admin\\Documents\\GitHub\\core\\core-project\\wwwroot\\",
+      "BasePath": "_content/core",
+      "RelativePath": "js/user.js",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\js\\user.js"
+    },
+    {
+      "Identity": "C:\\Users\\Admin\\Documents\\GitHub\\core\\core-project\\wwwroot\\style.css",
+      "SourceId": "core",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\Admin\\Documents\\GitHub\\core\\core-project\\wwwroot\\",
       "BasePath": "_content/core",
       "RelativePath": "style.css",
       "AssetKind": "All",
@@ -110,6 +129,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\style.css"
+    },
+    {
+      "Identity": "C:\\Users\\Admin\\Documents\\GitHub\\core\\core-project\\wwwroot\\user.html",
+      "SourceId": "core",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\Admin\\Documents\\GitHub\\core\\core-project\\wwwroot\\",
+      "BasePath": "_content/core",
+      "RelativePath": "user.html",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\user.html"
     }
   ]
 }

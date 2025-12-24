@@ -1,0 +1,37 @@
+[
+  {
+    "Id": 1,
+    "Name": "Assasin",
+    "WriterName": "Sappir",
+    "IsBorrowed": true,
+    "IsForAdults": true
+  },
+  {
+    "Id": 2,
+    "Name": "Pdahel",
+    "WriterName": "Keinan",
+    "IsBorrowed": false,
+    "IsForAdults": false
+  },
+  {
+    "Id": 3,
+    "Name": "Duplicates",
+    "WriterName": "Sappir",
+    "IsBorrowed": true,
+    "IsForAdults": true
+  },
+  {
+    "Id": 4,
+    "Name": "Assasin\u05D3\u05D3\u05D3\u05D3",
+    "WriterName": "\u05D2\u05D2\u05D2\u05D2\u05D2",
+    "IsBorrowed": true,
+    "IsForAdults": true
+  },
+  {
+    "Id": 5,
+    "Name": "N",
+    "WriterName": "N",
+    "IsBorrowed": false,
+    "IsForAdults": false
+  }
+]

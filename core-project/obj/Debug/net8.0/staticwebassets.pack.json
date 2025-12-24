@@ -1,24 +1,32 @@
 {
   "Files": [
     {
-      "Id": "D:\\core\\wwwroot\\app.js",
-      "PackagePath": "staticwebassets\\app.js"
-    },
-    {
-      "Id": "D:\\core\\wwwroot\\core.code-workspace",
+      "Id": "C:\\Users\\Admin\\Documents\\GitHub\\core\\core-project\\wwwroot\\core.code-workspace",
       "PackagePath": "staticwebassets\\core.code-workspace"
     },
     {
-      "Id": "D:\\core\\wwwroot\\images\\stack-books-with-library-scene.jpg",
+      "Id": "C:\\Users\\Admin\\Documents\\GitHub\\core\\core-project\\wwwroot\\images\\stack-books-with-library-scene.jpg",
       "PackagePath": "staticwebassets\\images\\stack-books-with-library-scene.jpg"
     },
     {
-      "Id": "D:\\core\\wwwroot\\index.html",
+      "Id": "C:\\Users\\Admin\\Documents\\GitHub\\core\\core-project\\wwwroot\\index.html",
       "PackagePath": "staticwebassets\\index.html"
     },
     {
-      "Id": "D:\\core\\wwwroot\\style.css",
+      "Id": "C:\\Users\\Admin\\Documents\\GitHub\\core\\core-project\\wwwroot\\js\\app.js",
+      "PackagePath": "staticwebassets\\js\\app.js"
+    },
+    {
+      "Id": "C:\\Users\\Admin\\Documents\\GitHub\\core\\core-project\\wwwroot\\js\\user.js",
+      "PackagePath": "staticwebassets\\js\\user.js"
+    },
+    {
+      "Id": "C:\\Users\\Admin\\Documents\\GitHub\\core\\core-project\\wwwroot\\style.css",
       "PackagePath": "staticwebassets\\style.css"
+    },
+    {
+      "Id": "C:\\Users\\Admin\\Documents\\GitHub\\core\\core-project\\wwwroot\\user.html",
+      "PackagePath": "staticwebassets\\user.html"
     },
     {
       "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.build.core.props",

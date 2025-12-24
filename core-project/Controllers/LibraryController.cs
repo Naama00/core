@@ -1,12 +1,12 @@
 using Microsoft.AspNetCore.Mvc;
 using System.IO;
-using Microsoft.AspNetCore.Mvc;
 using Library.Models;
+
 
 namespace Library.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("LibraryBook")]
     public class LibraryBookController : ControllerBase
     {
         private readonly ILibraryBookService _libraryBookService;
@@ -17,42 +17,55 @@ namespace Library.Controllers
             _libraryBookService = libraryBookService;
             _logger = logger;
         }
-       [HttpGet]
-public ActionResult<List<LibraryBook>> GetAll()
-{
-    try
-    {
-        var books = _libraryBookService.GetAllBooks();
-        return Ok(books);
-    }
-    catch (Exception ex)
-    {
-        _logger.LogError(ex, "An error occurred while getting all books.");
-        return StatusCode(500, "Internal server error");
-    }
-}
+
+        [HttpGet]
+        public ActionResult<List<LibraryBook>> GetAll()
+        {
+            try
+            {
+                var books = _libraryBookService.GetAllBooks();
+                return Ok(books);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while getting all books.");
+                return StatusCode(500, "Internal server error");
+            }
+        }
+
         [HttpGet("{id}")]
         public ActionResult<LibraryBook> Get(int id)
         {
             var book = _libraryBookService.GetBookById(id);
-            return book == null ? NotFound() : book;
+            return book == null ? NotFound() : Ok(book);
         }
 
         [HttpPost]
-        public ActionResult Create(LibraryBook newBook)
+        public ActionResult Create([FromBody] LibraryBook newBook)
         {
+            // אם ה-JS שלח אותיות קטנות והשרת לא הוגדר נכון, newBook יהיה null או עם שדות ריקים
+            if (newBook == null || string.IsNullOrEmpty(newBook.Name))
+            {
+                return BadRequest("השרת לא הצליח לקרוא את נתוני הספר - ודאי שמות שדות תואמים");
+            }
+
             _libraryBookService.AddBook(newBook);
-            return CreatedAtAction(nameof(Create), new { id = newBook.Id });
+            return Ok(newBook);
         }
 
         [HttpPut("{id}")]
-        public ActionResult Update(int id, LibraryBook newBook)
+        public ActionResult Update(int id, [FromBody] LibraryBook newBook)
         {
-            var book = _libraryBookService.GetBookById(id);
-            if (book == null)
+            if (newBook == null || id != newBook.Id)
+            {
+                return BadRequest("Invalid book data or ID mismatch");
+            }
+
+            var existingBook = _libraryBookService.GetBookById(id);
+            if (existingBook == null)
+            {
                 return NotFound();
-            if (book.Id != newBook.Id)
-                return BadRequest();
+            }
 
             _libraryBookService.UpdateBook(id, newBook);
             return NoContent();
@@ -63,7 +76,9 @@ public ActionResult<List<LibraryBook>> GetAll()
         {
             var book = _libraryBookService.GetBookById(id);
             if (book == null)
+            {
                 return NotFound();
+            }
 
             _libraryBookService.DeleteBook(id);
             return NoContent();
@@ -72,8 +87,13 @@ public ActionResult<List<LibraryBook>> GetAll()
         [HttpGet("view")]
         public IActionResult GetLibraryView()
         {
-            return PhysicalFile(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "index.html"), "text/html");
+            // ודאי שהקובץ index.html באמת נמצא בתוך תיקיית wwwroot
+            string filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "index.html");
+            if (!System.IO.File.Exists(filePath))
+            {
+                return NotFound("index.html not found in wwwroot");
+            }
+            return PhysicalFile(filePath, "text/html");
         }
     }
-    
 }

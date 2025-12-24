@@ -9,45 +9,56 @@
 </head>
 
 <body>
+    <a href="user.html">users:</a>
+    
     <h1>welcome to our library!</h1>
     <h3>every subscriotion can take 6 books</h3>
-    <form action="javascript:void(0);" method="post" onsubmit="addItem()">
-        <input type="text" id="bookName" name="bookName" placeholder="Book Name" required>
-        <input type="text" id="authorName" name="authorName" placeholder="Author Name" required>
-        <label for="IsForAdults">Is For Adults?</label>
-        <input type="checkbox" id="IsForAdults" name="IsForAdults">
-        <label for="isBorrowed">Is Borrowed?</label>
-        <input type="checkbox" id="isBorrowed" name="isBorrowed">
-        <button type="submit">add</button>
-    </form>
+  <form onsubmit="event.preventDefault(); addItem();" class="user-management-form">
+        <div class="input-group">
+    <input type="text" id="bookName" placeholder="Book Name" required>
+     </div>
+    <div class="input-group">
+    <input type="text" id="authorName" placeholder="Author Name" required>
+        </div>
+    <label>Is For Adults? <input type="checkbox" id="IsForAdults"></label>
+    <label>Is Borrowed? <input type="checkbox" id="isBorrowed"></label>
+    <button type="submit">Add</button>
+      
+</form>
+   <table id="libraryBooks">
+    <thead>
+        <tr>
+            <th>id</th>
+            <th>Name</th>
+            <th>Writer Name</th>
+            <th>Is Borrowed?</th>
+            <th>Is For Adults?</th>
+            <th>Edit</th>
+            <th>Delete</th>
+        </tr>
+    </thead>
+    <tbody id="books"></tbody> 
+</table>
 
-    <table id="libraryBooks">
-        <thead>
-            <tr>
-                <th>id</th>
-                <th>Name</th>
-                <th>Writer Name</th>
-                <th>Is Borrowed?</th>
-                <th>Is For Adults?</th>
-                <th>edit</th>
-                <th>delete</th>
-            </tr>
-        </thead>
-        <tbody id="books"></tbody>
-    </table>
-
-    <div id="edit">
-        <form id="editForm" onsubmit="return updateBook();">
-            <input type="hidden" id="editId">
-            <input type="text" id="editBookName" name="bookName" placeholder="Book Name">
-            <input type="text" id="editAuthorName" name="authorName" placeholder="Author Name">
-            <label><input type="checkbox" id="editIsForAdults" name="IsForAdults"> Is For Adults</label>
-            <label><input type="checkbox" id="editIsBorrowed" name="isBorrowed"> Is Borrowed</label>
-            <button type="submit">Save</button>
-            <button type="button" onclick="cancelEdit()">Cancel</button>
+<div id="editFormContainer">
+    <div class="modal-content">
+        <h3>Edit Book</h3>
+        <form onsubmit="event.preventDefault(); updateBook();">
+            <input type="hidden" id="edit-id">
+            <input type="text" id="edit-name" placeholder="Name">
+            <input type="text" id="edit-author" placeholder="Author">
+            <label><input type="checkbox" id="edit-isBorrowed"> Borrowed?</label><br>
+            <label><input type="checkbox" id="edit-isForAdults"> For Adults?</label><br><br>
+            <button type="submit">Save Changes</button>
+            <button type="button" onclick="closeEditForm()">Cancel</button>
         </form>
     </div>
-    <script src="app.js" asp-append-version="true"></script>
+</div>
+
+
+
+
+    <script src="js/app.js" asp-append-version="true"></script>
     <script type="text/javascript">getItems();</script>
 </body>
 
