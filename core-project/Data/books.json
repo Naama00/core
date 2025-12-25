@@ -22,16 +22,9 @@
   },
   {
     "Id": 4,
-    "Name": "Assasin\u05D3\u05D3\u05D3\u05D3",
-    "WriterName": "\u05D2\u05D2\u05D2\u05D2\u05D2",
+    "Name": "50-50",
+    "WriterName": "\u05D3\u05D1\u05D5\u05E8\u05D9 \u05E8\u05E0\u05D3",
     "IsBorrowed": true,
     "IsForAdults": true
-  },
-  {
-    "Id": 5,
-    "Name": "N",
-    "WriterName": "N",
-    "IsBorrowed": false,
-    "IsForAdults": false
   }
 ]

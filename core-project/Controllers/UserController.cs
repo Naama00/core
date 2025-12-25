@@ -20,62 +20,72 @@ namespace MyApp.Controllers
         [HttpGet]
         public ActionResult<List<User.Models.User>> GetAll()
         {
-            var users = _userService.GetAll();
-            return Ok(users);
-        }
-
-        // 2. שליפת משתמש בודד לפי ID: GET /api/Users/{id}
-        [HttpGet("{id}")]
-        public ActionResult<User.Models.User> GetById(int id)
-        {
-            var user = _userService.GetById(id);
-            if (user == null)
-            {
-                return NotFound(new { message = $"משתמש עם מזהה {id} לא נמצא" });
-            }
-            return Ok(user);
-        }
-
-        // 3. הוספת משתמש חדש: POST /api/Users
-        [HttpPost]
-        public ActionResult<User.Models.User> Create([FromBody] User.Models.User newUser)
-        {
-            if (newUser == null)
-            {
-                return BadRequest("נתוני משתמש לא תקינים");
+           try 
+    {
+        var users = _userService.GetAll();
+        return Ok(users);
+    }
+    catch (Exception ex)
+    {
+        // זה ידפיס לך בחלון ה-Output ב-Visual Studio את השגיאה האמיתית
+        System.Diagnostics.Debug.WriteLine(ex.Message);
+     
+        return StatusCode(500, ex.Message);
+    }
             }
 
-            _userService.Add(newUser);
-
-            // מחזיר סטטוס 201 (Created) עם נתיב לשליפת האובייקט החדש
-            return CreatedAtAction(nameof(GetById), new { id = newUser.Id }, newUser);
-        }
-
-        // 4. עדכון משתמש קיים: PUT /api/Users/{id}
- [HttpPut("{id}")]
-public IActionResult Update(int id, [FromBody] User.Models.User updatedUser)
-{
-    var user = _userService.GetById(id);
-    if (user == null) return NotFound();
-
-    _userService.Update(id, updatedUser);
-    return NoContent(); // מחזיר 204 בהצלחה
-}
-
-        // 5. מחיקת משתמש: DELETE /api/Users/{id}
-        [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
-        {
-            var user = _userService.GetById(id);
-            if (user == null)
+            // 2. שליפת משתמש בודד לפי ID: GET /api/Users/{id}
+            [HttpGet("{id}")]
+            public ActionResult<User.Models.User> GetById(int id)
             {
-                return NotFound();
+                var user = _userService.GetById(id);
+                if (user == null)
+                {
+                    return NotFound(new { message = $"משתמש עם מזהה {id} לא נמצא" });
+                }
+                return Ok(user);
             }
-            _userService.Delete(id); // עכשיו זה יעבוד!
-            return Ok(new { message = "המשתמש נמחק" });
-        }
-       
-           
+
+            // 3. הוספת משתמש חדש: POST /api/Users
+            [HttpPost]
+            public ActionResult<User.Models.User> Create([FromBody] User.Models.User newUser)
+            {
+                if (newUser == null)
+                {
+                    return BadRequest("נתוני משתמש לא תקינים");
+                }
+
+                _userService.Add(newUser);
+
+                // מחזיר סטטוס 201 (Created) עם נתיב לשליפת האובייקט החדש
+                return CreatedAtAction(nameof(GetById), new { id = newUser.Id }, newUser);
+            }
+
+            // 4. עדכון משתמש קיים: PUT /api/Users/{id}
+            [HttpPut("{id}")]
+            public IActionResult Update(int id, [FromBody] User.Models.User updatedUser)
+            {
+                var user = _userService.GetById(id);
+                if (user == null) return NotFound();
+
+                _userService.Update(id, updatedUser);
+                return NoContent(); // מחזיר 204 בהצלחה
+            }
+
+            // 5. מחיקת משתמש: DELETE /api/Users/{id}
+            [HttpDelete("{id}")]
+            public IActionResult Delete(int id)
+            {
+                var user = _userService.GetById(id);
+                if (user == null)
+                {
+                    return NotFound();
+                }
+                _userService.Delete(id); // עכשיו זה יעבוד!
+                return Ok(new { message = "המשתמש נמחק" });
+            }
+
+
         }
 
-}
+    }

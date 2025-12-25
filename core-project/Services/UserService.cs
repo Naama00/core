@@ -8,10 +8,10 @@ namespace MyApp.Services
 {
     public class UserService : IUserService
     {
-        // נתיב לקובץ ה-JSON - יישמר בתיקיית הפרויקט
-        private readonly string _filePath = "users.json";
 
-        // פונקציית עזר פרטית לקריאת הרשימה מהקובץ
+        private readonly string _filePath = "Data/users.json";
+
+        
         private List<User.Models.User> LoadData()
         {
             if (!File.Exists(_filePath))

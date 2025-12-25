@@ -65,6 +65,5 @@ C:\Users\Admin\Documents\GitHub\core\core-project\obj\Debug\net8.0\refint\core.d
 C:\Users\Admin\Documents\GitHub\core\core-project\obj\Debug\net8.0\core.pdb
 C:\Users\Admin\Documents\GitHub\core\core-project\obj\Debug\net8.0\core.genruntimeconfig.cache
 C:\Users\Admin\Documents\GitHub\core\core-project\obj\Debug\net8.0\ref\core.dll
-C:\Users\Admin\Documents\GitHub\core\core-project\bin\Debug\net8.0\users.json
-C:\Users\Admin\Documents\GitHub\core\core-project\bin\Debug\net8.0\libraryBooks.json
-C:\Users\Admin\Documents\GitHub\core\core-project\bin\Debug\net8.0\books.json
+C:\Users\Admin\Documents\GitHub\core\core-project\bin\Debug\net8.0\Data\books.json
+C:\Users\Admin\Documents\GitHub\core\core-project\bin\Debug\net8.0\Data\users.json
