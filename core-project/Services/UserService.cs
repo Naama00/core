@@ -1,33 +1,55 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
+using Microsoft.AspNetCore.Hosting;
 using User.Models;
 
 namespace MyApp.Services
 {
     public class UserService : IUserService
     {
+        private readonly string _filePath;
 
-        private readonly string _filePath = "Data/users.json";
-
-        
-        private List<User.Models.User> LoadData()
+        // הזרקת IWebHostEnvironment מאפשרת לנו למצוא את הנתיב האמיתי של התיקייה
+        public UserService(IWebHostEnvironment env)
         {
-            if (!File.Exists(_filePath))
+            // יצירת נתיב מוחלט לתיקיית Data בשורש הפרויקט
+            _filePath = Path.Combine(env.ContentRootPath, "Data", "users.json");
+
+            // וודוא שהתיקייה קיימת כדי למנוע קריסה בשמירה הראשונה
+            var directory = Path.GetDirectoryName(_filePath);
+            if (directory != null && !Directory.Exists(directory))
             {
-                return new List<User.Models.User>();
+                Directory.CreateDirectory(directory);
             }
-
-            string json = File.ReadAllText(_filePath);
-            
-            // אם הקובץ ריק, נחזיר רשימה חדשה
-            if (string.IsNullOrWhiteSpace(json)) return new List<User.Models.User>();
-
-            return JsonSerializer.Deserialize<List<User.Models.User>>(json) ?? new List<User.Models.User>();
         }
 
-        // פונקציית עזר פרטית לשמירת הרשימה לקובץ
+        private List<User.Models.User> LoadData()
+        {
+            try
+            {
+                if (!File.Exists(_filePath))
+                {
+                    return new List<User.Models.User>();
+                }
+
+                string json = File.ReadAllText(_filePath);
+                if (string.IsNullOrWhiteSpace(json)) return new List<User.Models.User>();
+
+                // הגדרת PropertyNameCaseInsensitive פותרת בעיות של תאימות בין JS ל-C#
+                var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+                return JsonSerializer.Deserialize<List<User.Models.User>>(json, options) ?? new List<User.Models.User>();
+            }
+            catch (Exception ex)
+            {
+                // במקרה של שגיאה בקריאת הקובץ, נחזיר רשימה ריקה ולא נגרום לכל השרת לקרוס
+                Console.WriteLine($"Error reading JSON: {ex.Message}");
+                return new List<User.Models.User>();
+            }
+        }
+
         private void SaveData(List<User.Models.User> users)
         {
             var options = new JsonSerializerOptions { WriteIndented = true };
@@ -35,20 +57,13 @@ namespace MyApp.Services
             File.WriteAllText(_filePath, json);
         }
 
-        public List<User.Models.User> GetAll()
-        {
-            return LoadData();
-        }
+        public List<User.Models.User> GetAll() => LoadData();
 
-        public User.Models.User GetById(int id)
-        {
-            return LoadData().FirstOrDefault(u => u.Id == id);
-        }
+        public User.Models.User? GetById(int id) => LoadData().FirstOrDefault(u => u.Id == id);
 
         public void Add(User.Models.User newUser)
         {
             var users = LoadData();
-            // יצירת מזהה אוטומטי
             newUser.Id = users.Any() ? users.Max(u => u.Id) + 1 : 1;
             users.Add(newUser);
             SaveData(users);
@@ -58,7 +73,6 @@ namespace MyApp.Services
         {
             var users = LoadData();
             var existingUser = users.FirstOrDefault(u => u.Id == id);
-            
             if (existingUser != null)
             {
                 existingUser.Name = updatedUser.Name;
@@ -73,13 +87,8 @@ namespace MyApp.Services
         public void Delete(int id)
         {
             var users = LoadData();
-            var user = users.FirstOrDefault(u => u.Id == id);
-            
-            if (user != null)
-            {
-                users.RemoveAll(u => u.Id == id);
-                SaveData(users);
-            }
+            users.RemoveAll(u => u.Id == id);
+            SaveData(users);
         }
     }
 }

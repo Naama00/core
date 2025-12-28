@@ -1,8 +1,8 @@
 [
   {
     "Id": 1,
-    "Name": "Assasin",
-    "WriterName": "Sappir",
+    "Name": "\u05DE\u05EA\u05E0\u05E7\u05E9",
+    "WriterName": "\u05D9\u05D5\u05E0\u05D4 \u05E1\u05E4\u05D9\u05E8",
     "IsBorrowed": true,
     "IsForAdults": true
   },
@@ -24,6 +24,20 @@
     "Id": 4,
     "Name": "50-50",
     "WriterName": "\u05D3\u05D1\u05D5\u05E8\u05D9 \u05E8\u05E0\u05D3",
+    "IsBorrowed": true,
+    "IsForAdults": true
+  },
+  {
+    "Id": 5,
+    "Name": "\u05DC\u05D5\u05DC\u05D0\u05D4 \u05D0\u05D9\u05E0\u05E1\u05D5\u05E4\u05D9\u05EA",
+    "WriterName": "\u05D7\u05D5\u05D9 \u05D1\u05E8",
+    "IsBorrowed": true,
+    "IsForAdults": true
+  },
+  {
+    "Id": 6,
+    "Name": "\u05D4\u05E9\u05D9\u05D3\u05D5\u05DA",
+    "WriterName": "\u05D2.\u05D4\u05DC\u05D5\u05D9",
     "IsBorrowed": true,
     "IsForAdults": true
   }

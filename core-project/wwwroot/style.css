@@ -10,6 +10,30 @@ body {
     background-position: center;
     text-align: center;
 }
+.custom-link {
+  display: inline-block;
+  padding: 10px 20px;
+  color: white !important; /* צבע הטקסט */
+  text-decoration: none; /* ביטול הקו התחתי */
+  border-radius: 8px; /* פינות מעוגלות */
+  font-family: sans-serif;
+  font-weight: bold;
+  transition: all 0.3s ease; /* אנימציה חלקה לשינויים */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* צל עדין */
+}
+
+.custom-link:hover {
+  transform: translateY(-2px); /* הרמה קלה של הכפתור */
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); /* הגדלת הצל */
+}
+
+.custom-link:active {
+  transform: translateY(0); /* תחושת "לחיצה" */
+}
+/* תוספת קטנה לשמירה על סגנון הפרויקט */
+input {
+    transition: border-color 0.3s ease;
+}
 
 /* שדרוג הכותרות */
 h1 {

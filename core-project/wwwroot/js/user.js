@@ -1,4 +1,4 @@
-const API_URL = '/api/Users';
+const API_URL = 'http://localhost:5041/api/Users';
 
 // פונקציה ראשית להרצה עם טעינת הדף
 document.addEventListener('DOMContentLoaded', () => {
@@ -14,26 +14,35 @@ async function loadUsers() {
         
         const users = await response.json();
         const tbody = document.getElementById('userTableBody');
+        
+        // בדיקת בטיחות למקרה שהאלמנט לא נמצא ב-HTML
+        if (!tbody) {
+            console.error("Missing element: userTableBody");
+            return;
+        }
+
         tbody.innerHTML = '';
 
         users.forEach(user => {
             const row = tbody.insertRow();
+            
+            // שים לב: השתמשתי באותיות קטנות (id, name, password) 
+            // כי ככה ה-API שולח את הנתונים כברירת מחדל
             row.innerHTML = `
-                <td>${user.Id}</td>
-                <td>${user.Name}</td>
-                <td>${user.Password}</td>
+                <td>${user.id || user.Id}</td>
+                <td>${user.name || user.Name}</td>
+                <td>${user.password || user.Password}</td>
                 <td>
-                   <button onclick="openEditForm(${user.Id}, '${user.Name}')">ערוך</button>
-        <button onclick="deleteUser(${user.Id})">מחק</button>
+                    <button onclick="openEditForm(${user.id || user.Id}, '${user.name || user.Name}')">ערוך</button>
+                    <button onclick="deleteUser(${user.id || user.Id})">מחק</button>
                 </td>
             `;
         });
     } catch (error) {
         console.error('Error:', error);
-        document.getElementById('listMessage').innerText = 'שגיאה בחיבור לשרת';
+        alert('שגיאה בטעינת המשתמשים. בדקי שהשרת פועל.');
     }
 }
-
 // 2. הגדרת מאזין לטופס ההוספה
 function setupFormListener() {
     const form = document.getElementById('addUserForm');

@@ -17,8 +17,16 @@
       "PackagePath": "staticwebassets\\js\\app.js"
     },
     {
+      "Id": "C:\\Users\\Admin\\Documents\\GitHub\\core\\core-project\\wwwroot\\js\\login.js",
+      "PackagePath": "staticwebassets\\js\\login.js"
+    },
+    {
       "Id": "C:\\Users\\Admin\\Documents\\GitHub\\core\\core-project\\wwwroot\\js\\user.js",
       "PackagePath": "staticwebassets\\js\\user.js"
+    },
+    {
+      "Id": "C:\\Users\\Admin\\Documents\\GitHub\\core\\core-project\\wwwroot\\login.html",
+      "PackagePath": "staticwebassets\\login.html"
     },
     {
       "Id": "C:\\Users\\Admin\\Documents\\GitHub\\core\\core-project\\wwwroot\\style.css",
