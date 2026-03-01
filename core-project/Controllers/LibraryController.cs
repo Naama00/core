@@ -1,7 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 using System.IO;
 using Library.Models;
-
+// --- הוספת ה-Namespace הנדרש להרשאות ---
+using Microsoft.AspNetCore.Authorization;
+// ----------------------------------------
 
 namespace Library.Controllers
 {
@@ -19,6 +21,7 @@ namespace Library.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public ActionResult<List<LibraryBook>> GetAll()
         {
             try
@@ -34,6 +37,7 @@ namespace Library.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize]
         public ActionResult<LibraryBook> Get(int id)
         {
             var book = _libraryBookService.GetBookById(id);
@@ -41,9 +45,9 @@ namespace Library.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin")] // <--- רק מנהל יכול להוסיף ספרים!
         public ActionResult Create([FromBody] LibraryBook newBook)
         {
-            // אם ה-JS שלח אותיות קטנות והשרת לא הוגדר נכון, newBook יהיה null או עם שדות ריקים
             if (newBook == null || string.IsNullOrEmpty(newBook.Name))
             {
                 return BadRequest("השרת לא הצליח לקרוא את נתוני הספר - ודאי שמות שדות תואמים");
@@ -54,6 +58,7 @@ namespace Library.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles = "Admin")] // <--- רק מנהל יכול לעדכן ספרים!
         public ActionResult Update(int id, [FromBody] LibraryBook newBook)
         {
             if (newBook == null || id != newBook.Id)
@@ -72,6 +77,7 @@ namespace Library.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")] // <--- רק מנהל יכול למחוק ספרים!
         public ActionResult Delete(int id)
         {
             var book = _libraryBookService.GetBookById(id);
@@ -87,7 +93,6 @@ namespace Library.Controllers
         [HttpGet("view")]
         public IActionResult GetLibraryView()
         {
-            // ודאי שהקובץ index.html באמת נמצא בתוך תיקיית wwwroot
             string filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "index.html");
             if (!System.IO.File.Exists(filePath))
             {

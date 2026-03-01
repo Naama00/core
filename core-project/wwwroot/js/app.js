@@ -1,12 +1,31 @@
-const uri = '/LibraryBook'; // נתיב יחסי בדרך כלל עובד הכי טוב בתוך פרויקט Core
+const uri = '/LibraryBook';
 let books = [];
+
+// --- פונקציית עזר להוספת הטוקן ל-Headers ---
+function getAuthHeaders() {
+    const token = sessionStorage.getItem('jwtToken');
+    return {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}` // שליחת הטוקן
+    };
+}
+// -------------------------------------------
 
 async function getItems() {
     console.log("מנסה למשוך נתונים מהשרת...");
     try {
-        const response = await fetch(uri);
+        const response = await fetch(uri, {
+            method: 'GET',
+            headers: getAuthHeaders() // הוספת Headers לקריאה
+        });
+
+        if (response.status === 401) {
+            alert("לא מחובר! אנא התחבר מחדש.");
+            window.location.href = "login.html"; // חזרה לדף התחברות
+            return;
+        }
+
         const data = await response.json();
-        console.log("נתונים שהתקבלו:", data);
         books = data;
         _displayItems(books);
     } catch (error) {
@@ -15,86 +34,84 @@ async function getItems() {
 }
 
 async function addItem() {
+    // מומלץ לתפוס אלמנטים פעם אחת מחוץ לפונקציה, אבל זה בסדר
+    const nameInput = document.getElementById('bookName');
+    const authorInput = document.getElementById('authorName');
+    const borrowedInput = document.getElementById('isBorrowed');
+    const adultsInput = document.getElementById('IsForAdults');
+
     const item = {
-        Name: document.getElementById('bookName').value.trim(),      // N גדולה
-        WriterName: document.getElementById('authorName').value.trim(), // W גדולה
-        IsBorrowed: document.getElementById('isBorrowed').checked,
-        IsForAdults: document.getElementById('IsForAdults').checked
+        Name: nameInput.value.trim(),
+        WriterName: authorInput.value.trim(),
+        IsBorrowed: borrowedInput.checked,
+        IsForAdults: adultsInput.checked
     };
 
     const response = await fetch(uri, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: getAuthHeaders(), // שימוש בפונקציית העזר
         body: JSON.stringify(item)
     });
 
     if (response.ok) {
-        // כאן הקסם: אנחנו קוראים שוב לשרת כדי להביא את הרשימה המעודכנת
-        await getItems(); 
+        await getItems();
         clearAddForm();
+    } else if (response.status === 403) {
+        alert("אין לך הרשאות להוסיף ספרים!");
+    } else if (response.status === 401) {
+        window.location.href = "login.html";
     }
 }
+
 function _displayItems(data) {
     const tbody = document.getElementById('books');
-    tbody.innerHTML = ''; // ניקוי הטבלה
+    tbody.innerHTML = '';
+    
+    // קבלת התפקיד כדי לדעת אם להציג כפתורי עריכה/מחיקה
+    const role = sessionStorage.getItem('userRole'); 
 
     data.forEach(item => {
         let tr = tbody.insertRow();
         
-        // שימוש באותיות גדולות בדיוק כפי שמופיע אצלך בקונסול!
         tr.insertCell(0).innerText = item.Id;
         tr.insertCell(1).innerText = item.Name;
         tr.insertCell(2).innerText = item.WriterName;
         tr.insertCell(3).innerText = item.IsBorrowed ? 'Yes' : 'No';
         tr.insertCell(4).innerText = item.IsForAdults ? 'Yes' : 'No';
 
-        // כפתור עריכה
-        let tdEdit = tr.insertCell(5);
-        tdEdit.innerHTML = `<button onclick="displayEditForm(${item.Id})">Edit</button>`;
-
-        // כפתור מחיקה
-        let tdDelete = tr.insertCell(6);
-        tdDelete.innerHTML = `<button onclick="deleteItem(${item.Id})">Delete</button>`;
+        // הוספת כפתורים רק אם המשתמש הוא מנהל
+        let tdActions = tr.insertCell(5);
+        if (role === 'Admin') {
+            // שימוש ב-template literals ליצירת הכפתורים
+            tdActions.innerHTML = `
+                <button onclick="displayEditForm(${item.Id})">Edit</button>
+                <button onclick="deleteItem(${item.Id})">Delete</button>
+            `;
+        }
     });
 }
-function clearAddForm() {
-    document.getElementById('bookName').value = '';
-    document.getElementById('authorName').value = '';
-    document.getElementById('isBorrowed').checked = false;
-    document.getElementById('IsForAdults').checked = false;
-}
+
 async function deleteItem(id) {
     if (!confirm("האם את בטוחה שברצונך למחוק את הספר?")) return;
 
     try {
         const response = await fetch(`${uri}/${id}`, {
-            method: 'DELETE'
+            method: 'DELETE',
+            headers: getAuthHeaders() // הוספת הטוקן
         });
 
         if (response.ok) {
-            console.log("הספר נמחק בהצלחה");
-            await getItems(); // רענון הטבלה
-        } else {
-            console.error("שגיאה במחיקה");
+            await getItems();
+        } else if (response.status === 403) {
+            alert("אין לך הרשאות למחוק ספרים!");
+        } else if (response.status === 401) {
+            window.location.href = "login.html";
         }
     } catch (error) {
-        console.error("נכשל בחיבור לשרת למחיקה:", error);
+        console.error("שגיאה במחיקה:", error);
     }
 }
-function displayEditForm(id) {
-    const item = books.find(item => (item.Id || item.id) === id);
 
-    if (item) {
-        document.getElementById('edit-id').value = item.Id || item.id;
-        document.getElementById('edit-name').value = item.Name || item.name;
-        document.getElementById('edit-author').value = item.WriterName || item.writerName;
-        document.getElementById('edit-isBorrowed').checked = item.IsBorrowed || item.isBorrowed;
-        document.getElementById('edit-isForAdults').checked = item.IsForAdults || item.isForAdults;
-        
-        // כאן השינוי: משתמשים ב-flex כדי שהמרכוז מה-CSS יפעל
-        document.getElementById('editFormContainer').style.display = 'flex';
-    }
-}
 async function updateBook() {
     const itemId = parseInt(document.getElementById('edit-id').value, 10);
     
@@ -109,23 +126,33 @@ async function updateBook() {
     try {
         const response = await fetch(`${uri}/${itemId}`, {
             method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json'
-            },
+            headers: getAuthHeaders(), // הוספת הטוקן
             body: JSON.stringify(item)
         });
 
         if (response.ok) {
-            closeEditForm(); // סגירת הטופס
-            await getItems(); // רענון הטבלה
-        } else {
-            console.error("שגיאה בעדכון הספר");
+            closeEditForm();
+            await getItems();
+        } else if (response.status === 403) {
+            alert("אין לך הרשאות לעדכן ספרים!");
+        } else if (response.status === 401) {
+            window.location.href = "login.html";
         }
     } catch (error) {
-        console.error("שגיאה בשליחת עדכון:", error);
+        console.error("שגיאה בעדכון:", error);
     }
 }
 
 function closeEditForm() {
     document.getElementById('editFormContainer').style.display = 'none';
 }
+
+function clearAddForm() {
+    document.getElementById('bookName').value = '';
+    document.getElementById('authorName').value = '';
+    document.getElementById('isBorrowed').checked = false;
+    document.getElementById('IsForAdults').checked = false;
+}
+
+// טעינת הנתונים כשדף הספרייה נפתח
+document.addEventListener('DOMContentLoaded', getItems);

@@ -57,6 +57,13 @@ namespace MyApp.Services
             File.WriteAllText(_filePath, json);
         }
 
+        public User.Models.User? Authenticate(string name, string password)
+        {
+            var users = LoadData();
+            // חיפוש משתמש לפי שם וסיסמה בלבד
+            return users.FirstOrDefault(u => u.Name == name && u.Password == password);
+        }
+        
         public List<User.Models.User> GetAll() => LoadData();
 
         public User.Models.User? GetById(int id) => LoadData().FirstOrDefault(u => u.Id == id);

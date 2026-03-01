@@ -67,3 +67,11 @@ C:\Users\Admin\Documents\GitHub\core\core-project\obj\Debug\net8.0\core.genrunti
 C:\Users\Admin\Documents\GitHub\core\core-project\obj\Debug\net8.0\ref\core.dll
 C:\Users\Admin\Documents\GitHub\core\core-project\bin\Debug\net8.0\Data\books.json
 C:\Users\Admin\Documents\GitHub\core\core-project\bin\Debug\net8.0\Data\users.json
+C:\Users\Admin\Documents\GitHub\core\core-project\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:\Users\Admin\Documents\GitHub\core\core-project\bin\Debug\net8.0\Microsoft.IdentityModel.Abstractions.dll
+C:\Users\Admin\Documents\GitHub\core\core-project\bin\Debug\net8.0\Microsoft.IdentityModel.JsonWebTokens.dll
+C:\Users\Admin\Documents\GitHub\core\core-project\bin\Debug\net8.0\Microsoft.IdentityModel.Logging.dll
+C:\Users\Admin\Documents\GitHub\core\core-project\bin\Debug\net8.0\Microsoft.IdentityModel.Protocols.dll
+C:\Users\Admin\Documents\GitHub\core\core-project\bin\Debug\net8.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+C:\Users\Admin\Documents\GitHub\core\core-project\bin\Debug\net8.0\Microsoft.IdentityModel.Tokens.dll
+C:\Users\Admin\Documents\GitHub\core\core-project\bin\Debug\net8.0\System.IdentityModel.Tokens.Jwt.dll

@@ -1,7 +1,24 @@
 const API_URL = 'http://localhost:5041/api/Users';
 
+// פונקציית עזר להוספת הטוקן ל-Headers
+function getAuthHeaders() {
+    const token = sessionStorage.getItem('jwtToken');
+    return {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+    };
+}
+
 // פונקציה ראשית להרצה עם טעינת הדף
 document.addEventListener('DOMContentLoaded', () => {
+    // בדיקת תפקיד כדי להסתיר אלמנטים לא מורשים
+    const role = sessionStorage.getItem('userRole');
+    if (role !== 'Admin') {
+        // משתמש רגיל לא יכול להוסיף משתמשים
+        const addForm = document.getElementById('addUserForm');
+        if (addForm) addForm.style.display = 'none';
+    }
+
     loadUsers();
     setupFormListener();
 });
@@ -9,7 +26,17 @@ document.addEventListener('DOMContentLoaded', () => {
 // 1. שליפת כל המשתמשים והצגתם בטבלה
 async function loadUsers() {
     try {
-        const response = await fetch(API_URL);
+        const response = await fetch(API_URL, {
+            method: 'GET',
+            headers: getAuthHeaders()
+        });
+
+        if (response.status === 401) {
+            alert("לא מחובר! אנא התחבר מחדש.");
+            window.location.href = "login.html";
+            return;
+        }
+
         if (!response.ok) throw new Error('נכשל בטעינת נתונים');
         
         const users = await response.json();
@@ -25,17 +52,21 @@ async function loadUsers() {
 
         users.forEach(user => {
             const row = tbody.insertRow();
-            
-            // שים לב: השתמשתי באותיות קטנות (id, name, password) 
-            // כי ככה ה-API שולח את הנתונים כברירת מחדל
+            const uid = user.id || user.Id;
+            const uname = user.name || user.Name;
+            const upass = user.password || user.Password;
+
+            let actions = `<button onclick="openEditForm(${uid}, '${uname}')">ערוך</button>`;
+            const role = sessionStorage.getItem('userRole');
+            if (role === 'Admin') {
+                actions += ` <button onclick="deleteUser(${uid})">מחק</button>`;
+            }
+
             row.innerHTML = `
-                <td>${user.id || user.Id}</td>
-                <td>${user.name || user.Name}</td>
-                <td>${user.password || user.Password}</td>
-                <td>
-                    <button onclick="openEditForm(${user.id || user.Id}, '${user.name || user.Name}')">ערוך</button>
-                    <button onclick="deleteUser(${user.id || user.Id})">מחק</button>
-                </td>
+                <td>${uid}</td>
+                <td>${uname}</td>
+                <td>${upass}</td>
+                <td>${actions}</td>
             `;
         });
     } catch (error) {
@@ -43,6 +74,7 @@ async function loadUsers() {
         alert('שגיאה בטעינת המשתמשים. בדקי שהשרת פועל.');
     }
 }
+
 // 2. הגדרת מאזין לטופס ההוספה
 function setupFormListener() {
     const form = document.getElementById('addUserForm');
@@ -60,14 +92,18 @@ function setupFormListener() {
         try {
             const response = await fetch(API_URL, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: getAuthHeaders(),
                 body: JSON.stringify(userData)
             });
 
             if (response.ok) {
                 nameInput.value = '';
                 passInput.value = '';
-                loadUsers(); // רענון הטבלה
+                loadUsers();
+            } else if (response.status === 403) {
+                alert('אין לך הרשאות להוסיף משתמשים!');
+            } else if (response.status === 401) {
+                window.location.href = "login.html";
             } else {
                 alert('שגיאה בשמירת המשתמש');
             }
@@ -83,11 +119,16 @@ async function deleteUser(id) {
 
     try {
         const response = await fetch(`${API_URL}/${id}`, {
-            method: 'DELETE'
+            method: 'DELETE',
+            headers: getAuthHeaders()
         });
 
         if (response.ok) {
-            loadUsers(); // רענון הטבלה
+            loadUsers();
+        } else if (response.status === 403) {
+            alert('אין לך הרשאות למחוק משתמשים!');
+        } else if (response.status === 401) {
+            window.location.href = "login.html";
         } else {
             alert('לא ניתן למחוק את המשתמש');
         }
@@ -95,13 +136,13 @@ async function deleteUser(id) {
         console.error('Error:', error);
     }
 }
+
 // פתיחת חלונית העריכה ומילוי נתונים קיימים
 function openEditForm(id, name) {
     document.getElementById('editUserId').value = id;
     document.getElementById('editUserName').value = name;
-    document.getElementById('editUserPassword').value = ''; // השארת סיסמה ריקה לעדכון
+    document.getElementById('editUserPassword').value = '';
     
-    // הצגת המודאל (שימוש ב-flex כפי שהגדרת ב-CSS למרכוז)
     document.getElementById('editFormContainer').style.display = 'flex';
 }
 
@@ -125,13 +166,17 @@ async function saveUserEdit() {
     try {
         const response = await fetch(`${API_URL}/${id}`, {
             method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
+            headers: getAuthHeaders(),
             body: JSON.stringify(updatedUser)
         });
 
         if (response.ok) {
             closeEditForm();
-            loadUsers(); // רענון הטבלה
+            loadUsers();
+        } else if (response.status === 403) {
+            alert('אין לך הרשאות לעדכן משתמשים אחרים!');
+        } else if (response.status === 401) {
+            window.location.href = "login.html";
         } else {
             alert('שגיאה בעדכון המשתמש');
         }

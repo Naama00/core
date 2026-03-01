@@ -2,16 +2,37 @@
   {
     "Id": 1,
     "Name": "Naama Weig",
-    "Password": "123"
+    "Password": "123",
+    "Role": "Admin"
   },
   {
     "Id": 2,
     "Name": "Michal",
-    "Password": "9876"
+    "Password": "9876",
+    "Role": "User"
   },
   {
     "Id": 3,
-    "Name": "Chani",
-    "Password": "5687"
+    "Name": "\u05D7\u05E0\u05D9 \u05D5\u05D5\u05D9\u05D2",
+    "Password": "5687",
+    "Role": "User"
+  },
+  {
+    "Id": 5,
+    "Name": "\u05E8\u05D7\u05DC\u05D9 \u05E8\u05D5\u05D3\u05DE\u05DF",
+    "Password": "1234",
+    "Role": "User"
+  },
+  {
+    "Id": 6,
+    "Name": "\u05D9\u05D5\u05E0\u05EA\u05DF \u05D5\u05D5\u05D9\u05D2",
+    "Password": "12345678",
+    "Role": "Admin"
+  },
+  {
+    "Id": 7,
+    "Name": "Tamar Wolf",
+    "Password": "2026",
+    "Role": "User"
   }
 ]
