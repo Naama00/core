@@ -1,11 +1,11 @@
 [
   {
     "Id": 1,
-    "Name": "\uFFFD\uFFFD\uFFFD\uFFFD\uFFFD",
-    "WriterName": "\uFFFD\uFFFD\uFFFD\uFFFD \uFFFD\uFFFD\uFFFD\uFFFD",
+    "Name": "\u05D4\u05E7\u05D9\u05E8 \u05D4\u05E8\u05D1\u05D9\u05E2\u05D9",
+    "WriterName": "\u05D3\u05D1\u05D5\u05E8\u05D9 \u05E8\u05E0\u05D3",
     "IsBorrowed": true,
     "IsForAdults": true,
-    "UserId": 10
+    "UserId": 0
   },
   {
     "Id": 2,
@@ -41,43 +41,43 @@
   },
   {
     "Id": 6,
-    "Name": "\uFFFD\uFFFD\uFFFD\uFFFD\uFFFD\uFFFD",
-    "WriterName": "\uFFFD.\uFFFD\uFFFD\uFFFD\uFFFD",
+    "Name": "\u05D0\u05D7\u05D3 \u05DE\u05D0\u05DC\u05E3",
+    "WriterName": "\u05DE.\u05E7\u05D9\u05E0\u05DF",
     "IsBorrowed": true,
     "IsForAdults": true,
-    "UserId": 7
+    "UserId": 0
   },
   {
     "Id": 8,
-    "Name": "\uFFFD\uFFFD\uFFFD\uFFFD\uFFFD\uFFFD",
-    "WriterName": "\uFFFD. \uFFFD. \uFFFD. \uFFFD\uFFFD\uFFFD\uFFFD\uFFFD\uFFFD\uFFFD",
+    "Name": "\u05D3\u05D3\u05D9 \u05D2\u05DE\u05D3\u05D9",
+    "WriterName": "\u05DE\u05E0\u05D5\u05D7\u05D4 \u05E4\u05D5\u05E7\u05E1",
     "IsBorrowed": true,
     "IsForAdults": true,
-    "UserId": 1
+    "UserId": 0
   },
   {
     "Id": 9,
-    "Name": "\uFFFD\uFFFD\uFFFD\uFFFD\uFFFD \uFFFD\uFFFD\uFFFD\uFFFD\uFFFD \uFFFD\uFFFD\uFFFD\uFFFD\uFFFD \uFFFD\uFFFD\uFFFD\uFFFD\uFFFD",
-    "WriterName": "\uFFFD\uFFFD\uFFFD\uFFFD \uFFFD\uFFFD\uFFFD\uFFFD\uFFFD",
-    "IsBorrowed": false,
+    "Name": "\u05D0\u05EA \u05DC\u05D0 \u05D1\u05D0\u05DE\u05EA",
+    "WriterName": "\u05D7.\u05DC\u05D5\u05D1\u05E8\u05D1\u05D5\u05DD",
+    "IsBorrowed": true,
     "IsForAdults": true,
-    "UserId": 8
+    "UserId": 0
   },
   {
     "Id": 12,
-    "Name": "\uFFFD\uFFFD\uFFFD \uFFFD\uFFFD\uFFFD\uFFFD\uFFFD\uFFFD\uFFFD",
-    "WriterName": "\uFFFD\uFFFD\uFFFD\uFFFD\uFFFD \uFFFD\uFFFD\uFFFD\uFFFD\uFFFD\uFFFD\uFFFD\uFFFD",
+    "Name": "kidnapped!",
+    "WriterName": "Ruth S.",
     "IsBorrowed": false,
     "IsForAdults": true,
-    "UserId": 1
+    "UserId": 0
   },
   {
     "Id": 14,
-    "Name": "\uFFFD\uFFFD\uFFFD \uFFFD\uFFFD\uFFFD \uFFFD\uFFFD\uFFFD \uFFFD\uFFFD\uFFFD\uFFFD",
-    "WriterName": "\uFFFD\uFFFD\uFFFD\uFFFD\uFFFD \uFFFD\uFFFD\uFFFD\uFFFD",
+    "Name": "\u05D4\u05E0\u05D5\u05E8\u05DE\u05DC\u05D9 \u05D4\u05D0\u05D7\u05E8\u05D5\u05DF",
+    "WriterName": "\u05E8\u05D5\u05EA\u05D9 \u05E7\u05E4\u05DC\u05E8",
     "IsBorrowed": true,
-    "IsForAdults": false,
-    "UserId": 6
+    "IsForAdults": true,
+    "UserId": 0
   },
   {
     "Id": 16,

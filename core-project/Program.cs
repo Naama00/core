@@ -3,6 +3,9 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using MyApp.Services;
 using Library.Hubs;
+using Library.Middleware;
+using Library.Services;
+using System.Threading.Channels;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
@@ -33,6 +36,11 @@ builder.Services.AddControllers()
 
 // הוסף SignalR
 builder.Services.AddSignalR();
+
+// הוסף Log Queue ו-Background Service
+var logChannel = Channel.CreateUnbounded<LogEntry>();
+builder.Services.AddSingleton(logChannel);
+builder.Services.AddHostedService<LogWriterBackgroundService>();
 
 builder.Services.AddSingleton<ILibraryBookService, LibraryBookService>();
 builder.Services.AddScoped<IUserService, UserService>();
@@ -144,6 +152,9 @@ app.UseHttpsRedirection();
 
 app.UseAuthentication(); 
 app.UseAuthorization();
+
+// הוסף Request Logging Middleware
+app.UseMiddleware<RequestLoggingMiddleware>();
 
 app.MapControllers();
 

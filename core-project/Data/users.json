@@ -1,7 +1,7 @@
 [
   {
     "Id": 1,
-    "Name": "Naama Weig",
+    "Name": "weig family",
     "Password": "123",
     "Email": "9742098@gmail.com",
     "Role": "Admin",
@@ -25,16 +25,16 @@
   },
   {
     "Id": 5,
-    "Name": "\uFFFD\uFFFD\uFFFD\uFFFD \uFFFD\uFFFD\uFFFD\uFFFD\uFFFD",
-    "Password": "1234",
+    "Name": "Racheli Rudman",
+    "Password": "899999",
     "Email": "racheli.rod@example.com",
     "Role": "User",
     "ProfilePictureUrl": null
   },
   {
     "Id": 6,
-    "Name": "\uFFFD\uFFFD\uFFFD\uFFFD\uFFFD \uFFFD\uFFFD\uFFFD\uFFFD",
-    "Password": "12345678",
+    "Name": "Jonathan Weig",
+    "Password": "0987",
     "Email": "y0897724@gmail.com",
     "Role": "User",
     "ProfilePictureUrl": null
@@ -49,15 +49,15 @@
   },
   {
     "Id": 8,
-    "Name": "\uFFFD\uFFFD\uFFFD\uFFFD\uFFFD \uFFFD\uFFFD\uFFFD\uFFFD",
-    "Password": "107219213180559228279",
+    "Name": "\u05DE\u05E9\u05E4\u05D7\u05EA \u05D5\u05D5\u05D9\u05D2",
+    "Password": "1234",
     "Email": "mishpacha.weig@example.com",
     "Role": "User",
     "ProfilePictureUrl": null
   },
   {
     "Id": 9,
-    "Name": "\uFFFD\uFFFD\uFFFD\uFFFD\uFFFD \uFFFD\uFFFD\uFFFD\uFFFD",
+    "Name": "\u05DE\u05E9\u05E4\u05D7\u05EA \u05D5\u05D5\u05D9\u05D2",
     "Password": "107219213180559228279",
     "Email": "family.weig@gmail.com",
     "Role": "User",
@@ -65,10 +65,10 @@
   },
   {
     "Id": 10,
-    "Name": "Naama Veig",
+    "Name": "Naama weig",
     "Password": "n0987654321",
     "Email": "n0533110130@gmail.com",
-    "Role": "User",
+    "Role": "Admin",
     "ProfilePictureUrl": "https://lh3.googleusercontent.com/a/ACg8ocIdKUSXLZeqgeqJHTER_S-titJ0e58TmMBvhJx5glHY64_XrD4=s96-c"
   }
 ]
