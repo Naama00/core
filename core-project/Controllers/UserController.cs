@@ -3,6 +3,7 @@ using User.Models;
 using MyApp.Services;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System.Security.Claims;
 
 namespace MyApp.Controllers
@@ -12,43 +13,32 @@ namespace MyApp.Controllers
     public class UsersController : ControllerBase
     {
         private readonly IUserService _userService;
+        private readonly ILibraryBookService _libraryBookService;
+        private readonly ICurrentUserService _currentUserService;
 
-        public UsersController(IUserService userService)
+        public UsersController(IUserService userService, ILibraryBookService libraryBookService, ICurrentUserService currentUserService)
         {
             _userService = userService;
+            _libraryBookService = libraryBookService;
+            _currentUserService = currentUserService;
         }
 
         // 1. שליפת כל המשתמשים: GET /api/Users
         //    מנהלים מקבלים את כל הרשימה, משתמשים רגילים רואים רק את עצמם
         [HttpGet]
-        [Authorize]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public ActionResult<List<User.Models.User>> GetAll()
         {
             try
             {
-                bool isAdmin = User.IsInRole("Admin");
-
-                if (isAdmin)
+                if (_currentUserService.IsAdmin)
                 {
                     var users = _userService.GetAll();
                     return Ok(users);
                 }
 
                 // לא מנהל: נחזיר רק את המשתמש הנוכחי
-                // רישום Claims כדי לאבחן בעיות
-                var claimsList = User.Claims.Select(c => $"{c.Type}={c.Value}");
-                System.Diagnostics.Debug.WriteLine("Current user claims: " + string.Join(", ", claimsList));
-
-                var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
-                                   ?? User.FindFirst("sub")?.Value; // jwt mapping
-
-                if (!int.TryParse(userIdClaim, out int currentUserId))
-                {
-                    // אם אין ID תקין נחשב כלא מחובר
-                    return Unauthorized();
-                }
-
-                var me = _userService.GetById(currentUserId);
+                var me = _currentUserService.User;
                 if (me == null)
                 {
                     return NotFound(new { message = "המשתמש לא נמצא" });
@@ -67,7 +57,7 @@ namespace MyApp.Controllers
 
         // 2. שליפת משתמש בודד לפי ID: GET /api/Users/{id}
         [HttpGet("{id}")]
-        [Authorize]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public ActionResult<User.Models.User> GetById(int id)
         {
             var user = _userService.GetById(id);
@@ -80,7 +70,7 @@ namespace MyApp.Controllers
 
         // 3. הוספת משתמש חדש: POST /api/Users
         [HttpPost]
-        [Authorize(Roles = "Admin")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
         public ActionResult<User.Models.User> Create([FromBody] User.Models.User newUser)
         {
             if (newUser == null)
@@ -96,7 +86,7 @@ namespace MyApp.Controllers
 
         // 4. עדכון משתמש קיים: PUT /api/Users/{id}
         [HttpPut("{id}")]
-        [Authorize]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public IActionResult Update(int id, [FromBody] User.Models.User updatedUser)
         {
             // 1. בדיקת קיום המשתמש
@@ -107,11 +97,7 @@ namespace MyApp.Controllers
             }
 
             // 2. בדיקת הרשאות (מי מנסה לעדכן?)
-            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            bool isAdmin = User.IsInRole("Admin");
-
-            // המרה בטוחה של ה-Claim ל-int
-            if (!int.TryParse(userIdClaim, out int currentUserId) || (currentUserId != id && !isAdmin))
+            if (_currentUserService.UserId != id && !_currentUserService.IsAdmin)
             {
                 // אם המשתמש אינו מנהל ואינו המשתמש בעל ה-ID הזה
                 return Forbid(); // 403 Forbidden
@@ -125,7 +111,7 @@ namespace MyApp.Controllers
 
         // 5. מחיקת משתמש: DELETE /api/Users/{id}
         [HttpDelete("{id}")]
-        [Authorize(Roles = "Admin")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
         public IActionResult Delete(int id)
         {
             var user = _userService.GetById(id);
@@ -133,8 +119,13 @@ namespace MyApp.Controllers
             {
                 return NotFound();
             }
-            _userService.Delete(id); // עכשיו זה יעבוד!
-            return Ok(new { message = "המשתמש נמחק" });
+            
+            // מחיקת כל הספרים של המשתמש (cascade delete)
+            _libraryBookService.DeleteBooksByUserId(id);
+            
+            // מחיקת המשתמש עצמו
+            _userService.Delete(id);
+            return Ok(new { message = "המשתמש ניתן כל הספרים שלו נמחקו" });
         }
 
 

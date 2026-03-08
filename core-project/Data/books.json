@@ -1,65 +1,98 @@
 [
   {
     "Id": 1,
-    "Name": "\u05DE\u05EA\u05E0\u05E7\u05E9",
-    "WriterName": "\u05D9\u05D5\u05E0\u05D4 \u05E1\u05E4\u05D9\u05E8",
+    "Name": "\uFFFD\uFFFD\uFFFD\uFFFD\uFFFD",
+    "WriterName": "\uFFFD\uFFFD\uFFFD\uFFFD \uFFFD\uFFFD\uFFFD\uFFFD",
     "IsBorrowed": true,
-    "IsForAdults": true
+    "IsForAdults": true,
+    "UserId": 10
   },
   {
     "Id": 2,
     "Name": "Pdahel",
     "WriterName": "Keinan",
     "IsBorrowed": false,
-    "IsForAdults": false
+    "IsForAdults": false,
+    "UserId": 9
   },
   {
     "Id": 3,
     "Name": "Duplicates",
     "WriterName": "Sappir",
     "IsBorrowed": true,
-    "IsForAdults": true
+    "IsForAdults": true,
+    "UserId": 3
   },
   {
     "Id": 4,
     "Name": "50-50",
-    "WriterName": "\u05D3\u05D1\u05D5\u05E8\u05D9 \u05E8\u05E0\u05D3",
+    "WriterName": "Dvori Rand",
     "IsBorrowed": true,
-    "IsForAdults": true
+    "IsForAdults": true,
+    "UserId": 5
   },
   {
     "Id": 5,
-    "Name": "\u05DC\u05D5\u05DC\u05D0\u05D4 \u05D0\u05D9\u05E0\u05E1\u05D5\u05E4\u05D9\u05EA",
-    "WriterName": "\u05D7\u05D5\u05D9 \u05D1\u05E8",
+    "Name": "captured!",
+    "WriterName": "D. Sela",
     "IsBorrowed": true,
-    "IsForAdults": true
+    "IsForAdults": true,
+    "UserId": 0
   },
   {
     "Id": 6,
-    "Name": "\u05D4\u05E9\u05D9\u05D3\u05D5\u05DA",
-    "WriterName": "\u05D2.\u05D4\u05DC\u05D5\u05D9",
+    "Name": "\uFFFD\uFFFD\uFFFD\uFFFD\uFFFD\uFFFD",
+    "WriterName": "\uFFFD.\uFFFD\uFFFD\uFFFD\uFFFD",
     "IsBorrowed": true,
-    "IsForAdults": true
+    "IsForAdults": true,
+    "UserId": 7
   },
   {
     "Id": 8,
-    "Name": "\u05D4\u05E4\u05EA\u05D9\u05D5\u05DF",
-    "WriterName": "\u05D9. \u05D1. \u05D2. \u05D1\u05E8\u05E7\u05D5\u05D1\u05D9\u05E5",
+    "Name": "\uFFFD\uFFFD\uFFFD\uFFFD\uFFFD\uFFFD",
+    "WriterName": "\uFFFD. \uFFFD. \uFFFD. \uFFFD\uFFFD\uFFFD\uFFFD\uFFFD\uFFFD\uFFFD",
     "IsBorrowed": true,
-    "IsForAdults": true
+    "IsForAdults": true,
+    "UserId": 1
   },
   {
     "Id": 9,
-    "Name": "\u05EA\u05DC\u05D0\u05D5\u05EA \u05D4\u05E2\u05DC\u05D9\u05D4 \u05D4\u05E9\u05E0\u05D9\u05D4 \u05DE\u05EA\u05D9\u05DE\u05DF",
-    "WriterName": "\u05E2\u05DE\u05E8\u05DD \u05D1\u05E2\u05D3\u05E0\u05D9",
+    "Name": "\uFFFD\uFFFD\uFFFD\uFFFD\uFFFD \uFFFD\uFFFD\uFFFD\uFFFD\uFFFD \uFFFD\uFFFD\uFFFD\uFFFD\uFFFD \uFFFD\uFFFD\uFFFD\uFFFD\uFFFD",
+    "WriterName": "\uFFFD\uFFFD\uFFFD\uFFFD \uFFFD\uFFFD\uFFFD\uFFFD\uFFFD",
     "IsBorrowed": false,
-    "IsForAdults": true
+    "IsForAdults": true,
+    "UserId": 8
   },
   {
-    "Id": 11,
-    "Name": "\u05D0\u05E9\u05D0 \u05E2\u05D9\u05E0\u05D9",
-    "WriterName": "\u05DC\u05D9\u05D1\u05D9 \u05E7\u05DC\u05D9\u05D9\u05DF",
+    "Id": 12,
+    "Name": "\uFFFD\uFFFD\uFFFD \uFFFD\uFFFD\uFFFD\uFFFD\uFFFD\uFFFD\uFFFD",
+    "WriterName": "\uFFFD\uFFFD\uFFFD\uFFFD\uFFFD \uFFFD\uFFFD\uFFFD\uFFFD\uFFFD\uFFFD\uFFFD\uFFFD",
+    "IsBorrowed": false,
+    "IsForAdults": true,
+    "UserId": 1
+  },
+  {
+    "Id": 14,
+    "Name": "\uFFFD\uFFFD\uFFFD \uFFFD\uFFFD\uFFFD \uFFFD\uFFFD\uFFFD \uFFFD\uFFFD\uFFFD\uFFFD",
+    "WriterName": "\uFFFD\uFFFD\uFFFD\uFFFD\uFFFD \uFFFD\uFFFD\uFFFD\uFFFD",
     "IsBorrowed": true,
-    "IsForAdults": true
+    "IsForAdults": false,
+    "UserId": 6
+  },
+  {
+    "Id": 16,
+    "Name": "Isterak",
+    "WriterName": "Maya Kainan",
+    "IsBorrowed": false,
+    "IsForAdults": true,
+    "UserId": 0
+  },
+  {
+    "Id": 17,
+    "Name": "Assasin",
+    "WriterName": "Sappir",
+    "IsBorrowed": false,
+    "IsForAdults": true,
+    "UserId": 0
   }
 ]

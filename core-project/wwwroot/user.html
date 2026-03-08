@@ -1,33 +1,50 @@
 <!DOCTYPE html>
-<html lang="he" dir="rtl">
+<html lang="en" dir="ltr">
 <head>
     <meta charset="UTF-8">
-    <title>ניהול משתמשים</title>
+    <title>User Management</title>
     <link rel="stylesheet" href="style.css"> </head>
 <body>
-    <a href="index.html" class="custom-link">books:</a>
-    <h1>ניהול משתמשי המערכת</h1>
+    <div class="header-navbar">
+        <div class="header-left">
+            <a href="index.html" class="custom-link">📚 Books</a>
+            <a href="user.html" class="custom-link active">👥 Users</a>
+        </div>
+        <div id="userProfile" class="user-profile-section">
+            <img id="userAvatar" src="" alt="User Avatar" crossOrigin="anonymous" class="user-profile-avatar">
+            <span id="userName" class="user-profile-name"></span>
+            <button onclick="logout()" class="logout-btn">Logout</button>
+        </div>
+    </div>
+    
+    <h1>User Management System</h1>
 
     <form id="addUserForm" class="user-management-form">
     <div class="input-group">
-        <label for="userName">שם משתמש</label>
-        <input type="text" id="userName" placeholder="שם:" required>
+        <label for="newUserName">Username</label>
+        <input type="text" id="newUserName" placeholder="Enter username" required>
     </div>
 
     <div class="input-group">
-        <label for="userPassword">סיסמה</label>
-        <input type="password" id="userPassword" placeholder="••••••••" required>
+        <label for="newUserEmail">Email</label>
+        <input type="email" id="newUserEmail" placeholder="email@example.com" required>
     </div>
 
-    <button type="submit">הוסף משתמש למערכת</button>
+    <div class="input-group">
+        <label for="newUserPassword">Password</label>
+        <input type="password" id="newUserPassword" placeholder="••••••••" required>
+    </div>
+
+    <button type="submit">Add User to System</button>
 </form>
     <table>
         <thead>
             <tr>
                 <th>ID</th>
-                <th>שם משתמש</th>
-                <th>סיסמה</th>
-                <th>פעולות</th>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Password</th>
+                <th>ACTIONS</th>
             </tr>
         </thead>
         <tbody id="userTableBody">
@@ -36,18 +53,116 @@
 
     <div id="editFormContainer">
         <div class="modal-content">
-            <h3>עריכת משתמש</h3>
+            <h3>Edit User</h3>
             <input type="hidden" id="editUserId">
-            <input type="text" id="editUserName" placeholder="שם חדש">
-            <input type="password" id="editUserPassword" placeholder="סיסמה חדשה">
+            <input type="text" id="editUserName" placeholder="New username">
+            <input type="password" id="editUserPassword" placeholder="New password">
             
-            <div style="display: flex; gap: 10px; margin-top: 15px;">
-                <button onclick="saveUserEdit()">שמור</button>
-                <button onclick="closeEditForm()" style="background: #666;">ביטול</button>
+            <div style="display: flex; gap: 10px; margin-top: 20px; justify-content: center;">
+                <button onclick="saveUserEdit()" style="min-width: 120px;">💾 Save</button>
+                <button onclick="closeEditForm()" style="background: #999; min-width: 120px;">❌ Cancel</button>
             </div>
         </div>
     </div>
 
+    <script src="js/theme-toggle.js"></script>
     <script src="js/user.js"></script>
+    <script type="text/javascript">
+        // Define functions inline to ensure they're available globally
+        function logout() {
+            console.log('Logout called from user.html');
+            sessionStorage.clear();
+            window.location.href = "login.html";
+        }
+        
+        function displayUserProfile() {
+            console.log('=== displayUserProfile START (user.html) ===');
+            const token = sessionStorage.getItem('jwtToken');
+            const picture = sessionStorage.getItem('userProfilePicture');
+            
+            console.log('Token exists:', !!token);
+            console.log('Token length:', token ? token.length : 0);
+            console.log('Picture from sessionStorage:', picture);
+            console.log('Picture length:', picture ? picture.length : 0);
+            
+            if (!token) {
+                console.log('No token, redirecting to login');
+                window.location.href = "login.html";
+                return;
+            }
+            
+            // Get user name from token
+            const userNameSpan = document.getElementById('userName');
+            let userName = 'User';
+            
+            try {
+                const base64Url = token.split('.')[1];
+                const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+                const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+                    return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+                }).join(''));
+                const decoded = JSON.parse(jsonPayload);
+                
+                // Check if this is a Google login (has givenname and surname claims)
+                const givenName = decoded['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname'];
+                const surName = decoded['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/surname'];
+                
+                if (givenName && surName) {
+                    // Google login - use full name
+                    userName = givenName + ' ' + surName;
+                } else {
+                    // Regular login - use name claim
+                    userName = decoded['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name'] || 'User';
+                }
+                console.log('User name from token:', userName);
+                if (userNameSpan) {
+                    userNameSpan.textContent = userName;
+                }
+            } catch (e) {
+                console.error('Error decoding token:', e);
+                if (userNameSpan) {
+                    userNameSpan.textContent = 'User';
+                }
+            }
+            
+            // Display Google profile picture
+            const img = document.getElementById('userAvatar');
+            console.log('Image element found:', !!img);
+            
+            if (img && picture) {
+                console.log('Picture URL is valid - setting src');
+                console.log('Setting src to:', picture);
+                img.src = picture;
+                img.style.display = 'block';
+                console.log('Image element src after setting:', img.src);
+                console.log('Image element display after setting:', img.style.display);
+                
+                // Add error handler to detect if image fails to load
+                img.onerror = function() {
+                    console.error('Image failed to load:', picture);
+                };
+                
+                img.onload = function() {
+                    console.log('Image loaded successfully');
+                };
+            } else if (!picture) {
+                console.log('Picture NOT available from Google');
+                if (img) {
+                    img.style.display = 'none';
+                    console.log('Hidden image element');
+                }
+            } else {
+                console.log('Image element not found in DOM');
+            }
+            console.log('=== displayUserProfile END ===');
+        }
+        
+        // Initialize when page loads
+        window.addEventListener('load', function() {
+            console.log('user.html: Page loaded, initializing...');
+            displayUserProfile();
+            loadUsers();
+        });
+    </script>
 </body>
 </html>

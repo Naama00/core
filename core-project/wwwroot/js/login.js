@@ -1,38 +1,60 @@
-document.getElementById('loginForm').addEventListener('submit', async function (e) {
-    e.preventDefault();
+// המתן עד שה-DOM הטען בעצמו
+console.log("login.js עומס");
 
-    const usernameInput = document.getElementById('username').value;
-    const passwordInput = document.getElementById('password').value;
-    const message = document.getElementById('message');
+const form = document.getElementById('loginForm');
+console.log("form element:", form);
 
-    try {
-        // 1. שליחה לשרת לבדיקת משתמש וקבלת טוקן
-        const response = await fetch('/api/Auth/login', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json' // חובה!
-            },
-            // ודא שמות שדות תואמים ל-C#
-            body: JSON.stringify({ Name: usernameInput, Password: passwordInput })
-        });
+if (form) {
+    form.addEventListener('submit', async function (e) {
+        e.preventDefault();
+        console.log("Form submit event triggered");
 
-        if (response.ok) {
-            const data = await response.json();
-            
-            // 2. שמירת הטוקן ב-Session Storage
-            sessionStorage.setItem('jwtToken', data.Token);
-            sessionStorage.setItem('userRole', data.Role);
+        const emailElement = document.getElementById('email');
+        const passwordElement = document.getElementById('password');
+        const messageDiv = document.getElementById('message');
 
-            message.style.color = "green";
-            message.textContent = "התחברת בהצלחה!";
-            window.location.href = "index.html";
-        } else {
-            message.style.color = "red";
-            message.textContent = "שם משתמש או סיסמה שגויים.";
+        console.log("Email element found:", emailElement ? "Yes" : "No");
+        console.log("Password element found:", passwordElement ? "Yes" : "No");
+
+        if (!emailElement || !passwordElement) {
+            console.error("Missing form elements!");
+            return;
         }
-    } catch (error) {
-        console.error("שגיאה בהתחברות:", error);
-        message.style.color = "red";
-        message.textContent = "שגיאה בחיבור לשרת.";
-    }
-});
+
+        const email = emailElement.value.trim();
+        const password = passwordElement.value.trim();
+
+        console.log("Sending login request with email:", email);
+
+        try {
+            const response = await fetch('/api/Auth/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ Email: email, Password: password })
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                sessionStorage.setItem('jwtToken', data.Token);
+                sessionStorage.setItem('userRole', data.Role);
+                
+                messageDiv.style.color = "green";
+                messageDiv.textContent = "התחברת בהצלחה!";
+                
+                setTimeout(() => {
+                    window.location.href = "index.html";
+                }, 500);
+            } else {
+                messageDiv.style.color = "red";
+                messageDiv.textContent = "אימייל או סיסמה שגויים";
+                console.error("Login failed:", response.status);
+            }
+        } catch (error) {
+            console.error("Network error:", error);
+            messageDiv.style.color = "red";
+            messageDiv.textContent = "שגיאה בהתחברות לשרת";
+        }
+    });
+} else {
+    console.error("loginForm not found in DOM");
+}

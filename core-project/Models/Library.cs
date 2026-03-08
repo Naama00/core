@@ -7,5 +7,6 @@ namespace Library.Models
         public string WriterName { get; set; }
         public bool IsBorrowed { get; set; }
         public bool IsForAdults { get; set; }
+        public int UserId { get; set; }
     }
 }

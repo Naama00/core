@@ -72,4 +72,18 @@ public class LibraryBookService : ILibraryBookService
             SaveData(booksList);
         }
     }
+
+    public void DeleteBooksByUserId(int userId)
+    {
+        var booksList = LoadData();
+        var booksToDelete = booksList.Where(b => b.UserId == userId).ToList();
+        foreach (var book in booksToDelete)
+        {
+            booksList.Remove(book);
+        }
+        if (booksToDelete.Any())
+        {
+            SaveData(booksList);
+        }
+    }
 }

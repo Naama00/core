@@ -63,6 +63,13 @@ namespace MyApp.Services
             // חיפוש משתמש לפי שם וסיסמה בלבד
             return users.FirstOrDefault(u => u.Name == name && u.Password == password);
         }
+
+        public User.Models.User? AuthenticateByEmail(string email, string password)
+        {
+            var users = LoadData();
+            // חיפוש משתמש לפי אימייל וסיסמה
+            return users.FirstOrDefault(u => !string.IsNullOrEmpty(u.Email) && u.Email == email && u.Password == password);
+        }
         
         public List<User.Models.User> GetAll() => LoadData();
 
@@ -86,6 +93,14 @@ namespace MyApp.Services
                 if (!string.IsNullOrEmpty(updatedUser.Password))
                 {
                     existingUser.Password = updatedUser.Password;
+                }
+                if (!string.IsNullOrEmpty(updatedUser.Email))
+                {
+                    existingUser.Email = updatedUser.Email;
+                }
+                if (updatedUser.ProfilePictureUrl != null)
+                {
+                    existingUser.ProfilePictureUrl = updatedUser.ProfilePictureUrl;
                 }
                 SaveData(users);
             }

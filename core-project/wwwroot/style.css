@@ -1,308 +1,995 @@
-/* שיפור ה-Body והרקע */
-body {
-    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; /* פונט מודרני יותר */
-    background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url(/images/stack-books-with-library-scene.jpg);
-    background-attachment: fixed; /* הרקע לא זז בגלילה - יוצר אפקט יוקרתי */
+/* ============================================
+   MODERN GLASS MORPHISM + WAVE EFFECT DESIGN
+   WITH LIGHT & DARK THEME TOGGLE
+   ============================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+* {
     margin: 0;
-    padding: 20px;
-    color: white;
-    background-size: cover;
-    background-position: center;
-    text-align: center;
+    padding: 0;
+    box-sizing: border-box;
 }
+
+/* LIGHT THEME - DEFAULT */
+:root,
+:root.light-theme {
+    /* Light Color Palette */
+    --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --primary-color: #667eea;
+    --secondary-color: #764ba2;
+    --accent-color: #f093fb;
+    --light-bg: #f8f9ff;
+    --bg-secondary: #ffffff;
+    --white: #ffffff;
+    --text-dark: #2d3748;
+    --text-light: #718096;
+    --text-nav: #4a5568;
+    --border-light: #e2e8f0;
+    --shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+    --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.12);
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* DARK THEME */
+:root.dark-theme {
+    /* Dark Color Palette */
+    --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --primary-color: #667eea;
+    --secondary-color: #764ba2;
+    --accent-color: #f093fb;
+    --light-bg: #1a1a2e;
+    --bg-secondary: #16213e;
+    --white: #e0e0e0;
+    --text-dark: #e0e0e0;
+    --text-light: #b0b0b0;
+    --text-nav: #d0d0d0;
+    --border-light: #2a2a4e;
+    --shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.4);
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Base HTML and Body Styles */
+html, body {
+    font-family: 'Poppins', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: var(--light-bg);
+    color: var(--text-dark);
+    line-height: 1.6;
+    width: 100%;
+    height: 100%;
+}
+
+body {
+    transition: var(--transition);
+}
+
+/* ============================================
+   ANIMATIONS & KEYFRAMES
+   ============================================ */
+
+@keyframes gradientShift {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+@keyframes glow {
+    0%, 100% {
+        box-shadow: 0 0 5px rgba(102, 126, 234, 0.3), 0 0 20px rgba(102, 126, 234, 0.2);
+    }
+    50% {
+        box-shadow: 0 0 10px rgba(102, 126, 234, 0.6), 0 0 30px rgba(102, 126, 234, 0.4);
+    }
+}
+
+@keyframes glowDark {
+    0%, 100% {
+        box-shadow: 0 0 8px rgba(102, 126, 234, 0.4), 0 0 25px rgba(102, 126, 234, 0.3);
+    }
+    50% {
+        box-shadow: 0 0 15px rgba(102, 126, 234, 0.8), 0 0 40px rgba(102, 126, 234, 0.6);
+    }
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: -1000px 0;
+    }
+    100% {
+        background-position: 1000px 0;
+    }
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+@keyframes ripple {
+    0% {
+        transform: scale(0);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(4);
+        opacity: 0;
+    }
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(10px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+}
+
+/* ============================================
+   HEADER/NAVIGATION
+   ============================================ */
+
+/* Theme Toggle Button */
+.theme-toggle {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 50;
+    background: var(--primary-gradient);
+    border: none;
+    color: white;
+    padding: 12px 20px;
+    border-radius: 50px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    transition: var(--transition);
+    animation: slideUp 0.6s ease-out, glow 3s ease-in-out infinite;
+    font-family: 'Poppins', 'Inter', sans-serif;
+    letter-spacing: 0.3px;
+}
+
+.theme-toggle:hover {
+    transform: translateY(-2px) rotate(5deg);
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5);
+}
+
+.theme-toggle:active {
+    transform: translateY(0) rotate(0);
+}
+
+.theme-toggle svg {
+    width: 16px;
+    height: 16px;
+}
+
+/* Top Navigation Bar */
+.header-navbar {
+    background: var(--bg-secondary);
+    padding: 16px 32px;
+    box-shadow: var(--shadow);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border-light);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.header-left {
+    display: flex;
+    gap: 24px;
+    align-items: center;
+}
+
+.header-left .custom-link.active {
+    border-bottom: 3px solid var(--primary-color);
+    padding-bottom: 8px;
+}
+
 .custom-link {
-  display: inline-block;
-  padding: 10px 20px;
-  color: white !important; /* צבע הטקסט */
-  text-decoration: none; /* ביטול הקו התחתי */
-  border-radius: 8px; /* פינות מעוגלות */
-  font-family: sans-serif;
-  font-weight: bold;
-  transition: all 0.3s ease; /* אנימציה חלקה לשינויים */
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* צל עדין */
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 18px;
+    transition: var(--transition);
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-family: 'Poppins', 'Inter', sans-serif;
+    letter-spacing: 0.2px;
+    display: inline-block;
+    position: relative;
 }
 
 .custom-link:hover {
-  transform: translateY(-2px); /* הרמה קלה של הכפתור */
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); /* הגדלת הצל */
+    background: rgba(102, 126, 234, 0.1);
+    color: var(--secondary-color);
 }
 
-.custom-link:active {
-  transform: translateY(0); /* תחושת "לחיצה" */
-}
-/* תוספת קטנה לשמירה על סגנון הפרויקט */
-input {
-    transition: border-color 0.3s ease;
-}
-
-/* שדרוג הכותרות */
-h1 {
-    color: #FF8C42;
-    font-size: 2.8em;
-    text-shadow: 2px 2px 10px rgba(0,0,0,0.5);
-    margin-bottom: 10px;
-    letter-spacing: 1px;
+.user-profile-section {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    z-index: 101;
 }
 
-/* שדרוג הטבלה - מראה זכוכית יוקרתי */
-table {
-    width: 100%;
-    border-collapse: separate;
-    border-spacing: 0;
-    margin-top: 20px;
-    background: rgba(20, 20, 20, 0.65); /* שקיפות כהה */
-    backdrop-filter: blur(12px); /* טשטוש רקע חזק יותר */
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 15px;
-    box-shadow: 0 12px 40px rgba(0,0,0,0.5);
-    overflow: hidden;
+.user-profile-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    border: 3px solid var(--primary-color);
+    object-fit: cover;
+    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.25);
+    display: block !important;
 }
 
-th {
-    background: linear-gradient(90deg, #FF8C42, #FFA366); /* גרדיאנט עדין בכותרת */
-    padding: 16px;
-    letter-spacing: 1px;
+.user-profile-name {
+    font-weight: 600;
+    color: var(--text-dark);
+    min-width: 120px;
+    text-align: right;
+    font-size: 15px;
 }
 
-td {
-    padding: 14px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-    transition: all 0.3s ease; /* מעבר חלק בשינויי צבע */
+/* ============================================
+   BUTTONS - RIPPLE/WAVE EFFECT
+   ============================================ */
+
+@keyframes ripple {
+    0% {
+        transform: scale(0);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(4);
+        opacity: 0;
+    }
 }
 
-tr:hover td {
-    background-color: rgba(255, 255, 255, 0.08); /* הדגשה של השורה בזמן מעבר עכבר */
-    color: #FF8C42; /* הטקסט הופך לכתום עדין במעבר */
+@keyframes slideUp {
+    from {
+        transform: translateY(10px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
 }
 
-/* עיצוב כפתורי פעולה בטבלה */
-td button {
-    padding: 6px 12px;
-    font-size: 0.85em;
-    margin: 2px;
-    background-color: transparent;
-    border: 1px solid #FF8C42;
-    color: #ffffff;
-    transition: all 0.2s;
-}
-
-td button:hover {
-    background-color: #FF8C42;
-    color: white;
-    transform: translateY(-2px); /* קפיצה קטנה למעלה */
-}
-
-/* כפתור מחיקה ספציפי */
-td button[onclick*="delete"] {
-    border-color: #ff4444;
-    color: #ffffff;
-}
-
-td button[onclick*="delete"]:hover {
-    background-color: #ff4444;
-    color: white;
-}
-
-
-.modal-content h3 {
-    margin-top: 0;
-    color: #FF8C42;
-    font-size: 1.5em;
-}
-
-.modal-content input[type="text"] {
-    background: #f5f5f5;
-    border: 1px solid #ddd;
-    margin: 8px 0;
-}
-/* חובה: הסתרת חלונית העריכה כברירת מחדל */
-/* המיכל החיצוני - עכשיו הוא הופך ל"ממרכז" */
-#editFormContainer {
-    display: none; /* משתנה ל-flex דרך ה-JS או כשרוצים להציג */
-    position: fixed;
-    z-index: 1000;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.7); /* רקע מעט כהה יותר לעומק */
-    backdrop-filter: blur(8px);
-    
-    /* פקודות הקסם למרכוז: */
-    justify-content: center; /* מרכוז אופקי */
-    align-items: center;     /* מרכוז אנכי */
-}
-
-/* החלונית עצמה */
-.modal-content {
-    background: white;
-    padding: 30px;
-    border-radius: 20px;
-    width: 90%;
-    max-width: 400px; /* רוחב נוח לטופס */
-    box-shadow: 0 15px 35px rgba(0,0,0,0.5);
-    position: relative; /* מאפשר גמישות פנימית */
-    margin: 0; /* מבטל את ה-margin הקודם */
-    color: #333;
-    text-align: right; /* התאמה לעברית אם תרצי */
-    direction: rtl;    /* כיוון טקסט מימין לשמאל */
-}
-
-/* עיצוב כללי לכפתורים (הוספה, שמירה, ביטול) */
 button {
-    padding: 10px 20px;
-    background: linear-gradient(135deg, #FF8C42, #FFA366);
-    color: white;
+    position: relative;
+    overflow: hidden;
     border: none;
-    border-radius: 8px;
-    font-weight: bold;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 14px;
     cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(255, 140, 66, 0.3);
-}
-
-button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(255, 140, 66, 0.4);
-    filter: brightness(1.1);
-}
-
-/* כפתורי ה-Edit וה-Delete בתוך הטבלה (שיהיו קטנים יותר) */
-td button {
-    padding: 5px 12px;
-    font-size: 0.85em;
-    margin: 2px;
-}
-
-/* כפתור "ביטול" (Cancel) בצבע אפור כדי להבדיל אותו */
-button[onclick*="closeEditForm"] {
-    background: #666;
-    box-shadow: none;
-}
-button[onclick*="closeEditForm"]:hover {
-    background: #555;
-    box-shadow: none;
-}
-/* עיצוב כללי לכל שדות הטקסט */
-input[type="text"], 
-input[type="number"] {
-    padding: 12px 15px;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 8px;
-    background: rgba(255, 255, 255, 0.9); /* לבן כמעט אטום לקריאות מקסימלית */
-    color: #333;
-    font-size: 1rem;
-    transition: all 0.3s ease;
-    outline: none;
-    box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
-}
-
-/* אפקט בזמן לחיצה על האינפוט */
-input[type="text"]:focus {
-    border-color: #FF8C42;
-    box-shadow: 0 0 8px rgba(255, 140, 66, 0.4);
-    background: #fff;
-}
-
-/* עיצוב הצ'קבוקסים (Checkboxes) והלייבלים שלהם */
-label {
+    transition: var(--transition);
+    padding: 10px 24px;
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    cursor: pointer;
-    font-size: 0.95em;
+    background: var(--primary-gradient);
     color: white;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    font-family: 'Poppins', 'Inter', sans-serif;
+    letter-spacing: 0.3px;
 }
 
-/* אם הלייבל נמצא בתוך המודאל (העריכה), הצבע צריך להיות כהה */
-.modal-content label {
-    color: #333;
+button:hover {
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.45);
 }
 
-input[type="checkbox"] {
-    width: 18px;
-    height: 18px;
-    cursor: pointer;
-    accent-color: #FF8C42; /* צובע את ה-V בכתום */
+button:active {
+    opacity: 0.95;
 }
 
-/* שיפור טופס ההוספה (הטופס שב-Layout המרכזי) */
-form#add-form {
-    display: flex;
-    gap: 15px;
-    justify-content: center;
-    align-items: center;
-    padding: 25px;
-    background: rgba(0, 0, 0, 0.3);
-    border-radius: 15px;
+button::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+}
+
+button:active::before {
+    animation: none;
+}
+
+.logout-btn {
+    background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+    box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+    padding: 8px 20px;
+    font-size: 13px;
+}
+
+.logout-btn:hover {
+    box-shadow: 0 8px 25px rgba(255, 107, 107, 0.5);
+    transform: translateY(-2px);
+}
+
+button[type="submit"] {
+    width: 100%;
+    padding: 12px 24px;
+}
+
+/* ============================================
+   HEADINGS
+   ============================================ */
+
+h1 {
+    font-size: 48px;
+    font-weight: 800;
+    background: var(--primary-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin: 40px 0 16px 0;
+    text-align: center;
+    animation: slideUp 0.6s ease-out;
+    letter-spacing: -0.5px;
+}
+
+h2 {
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin: 32px 0 16px 0;
+    animation: slideUp 0.6s ease-out;
+    letter-spacing: -0.3px;
+}
+
+h3 {
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--text-light);
+    margin: 24px 0 12px 0;
+    text-align: center;
+    letter-spacing: -0.2px;
+    animation: slideUp 0.6s ease-out 0.2s both;
+}
+
+/* ============================================
+   FORMS & INPUT GROUPS
+   ============================================ */
+
+.user-management-form,
+#addUserForm,
+form {
+    background: var(--bg-secondary);
+    padding: 32px;
+    border-radius: 16px;
+    margin: 32px auto;
+    max-width: 600px;
+    box-shadow: var(--shadow-lg);
     backdrop-filter: blur(10px);
-}
-/* שדרוג טופס ההוספה למראה נקי ומקצועי */
-.user-management-form {
-    display: flex;
-    gap: 25px; /* רווח נקי בין הקבוצות */
-    justify-content: center;
-    align-items: flex-end; /* שומר על קו תחתון אחיד לשדות ולכפתור */
-    padding: 30px;
-    background: rgba(20, 20, 20, 0.4);
-    border-radius: 15px;
-    backdrop-filter: blur(15px);
-    margin-bottom: 40px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(102, 126, 234, 0.1);
+    animation: slideUp 0.6s ease-out 0.3s both;
 }
 
 .input-group {
-    display: flex;
-    flex-direction: column;
-    gap: 6px; /* רווח קטן וצפוף בין הלייבל לאינפוט */
-    text-align: right;
+    margin-bottom: 20px;
+    animation: slideUp 0.6s ease-out;
 }
 
 .input-group label {
-    font-size: 0.85rem;
-    color: #FF8C42;
-    font-weight: bold;
-    margin-right: 2px;
-    text-transform: uppercase;
+    display: block;
+    font-weight: 600;
+    color: var(--text-dark);
+    margin-bottom: 12px;
+    font-size: 14px;
+    letter-spacing: 0px;
+}
+
+/* ============================================
+   INPUT FIELDS - WAVE EFFECT
+   ============================================ */
+
+@keyframes waveFill {
+    0% {
+        background-position: 0% 50%;
+    }
+    100% {
+        background-position: 100% 50%;
+    }
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+textarea {
+    width: 100%;
+    padding: 14px 18px;
+    border: 2px solid var(--border-light);
+    border-radius: 12px;
+    font-size: 15px;
+    color: var(--text-dark);
+    background: linear-gradient(90deg, var(--bg-secondary) 0%, rgba(102, 126, 234, 0.05) 100%);
+    transition: var(--transition);
+    font-family: inherit;
+    position: relative;
+}
+
+input[type="text"]::placeholder,
+input[type="email"]::placeholder,
+input[type="password"]::placeholder,
+input[type="number"]::placeholder {
+    color: var(--text-light);
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus,
+input[type="number"]:focus,
+textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    background: linear-gradient(90deg, var(--bg-secondary) 0%, rgba(102, 126, 234, 0.1) 100%);
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.15);
+}
+
+input[type="text"]:focus::placeholder,
+input[type="email"]:focus::placeholder,
+input[type="password"]:focus::placeholder,
+input[type="number"]:focus::placeholder {
+    color: var(--primary-color);
+}
+
+/* Wave effect on input - animated underline */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"] {
+    position: relative;
+    background-image: 
+        linear-gradient(90deg, transparent, transparent),
+        linear-gradient(var(--primary-color), var(--primary-color));
+    background-size: 0 2px, 100% 2px;
+    background-position: 0 100%, 0 100%;
+    background-repeat: no-repeat;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus,
+input[type="number"]:focus {
+    background-size: 100% 2px, 100% 2px;
+}
+
+/* Checkboxes */
+input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    accent-color: var(--primary-color);
+    margin: 0 8px;
+    transition: var(--transition);
+}
+
+input[type="checkbox"]:hover {
+    opacity: 0.8;
+}
+
+input[type="checkbox"]:checked {
+    opacity: 1;
+}
+
+label:has(input[type="checkbox"]) {
+    display: inline-flex;
+    align-items: center;
+    font-weight: 500;
+    margin-right: 20px;
+    margin-bottom: 10px;
+    color: var(--text-dark);
+    cursor: pointer;
+}
+
+/* ============================================
+   TABLES
+   ============================================ */
+
+table {
+    width: 95%;
+    margin: 40px auto;
+    border-collapse: collapse;
+    background: var(--bg-secondary);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: var(--shadow-lg);
+    animation: slideUp 0.6s ease-out 0.3s both;
+}
+
+table thead {
+    background: var(--primary-gradient);
+    color: white;
+}
+
+table thead th {
+    padding: 18px;
+    font-weight: 600;
+    text-align: right;
+    font-size: 14px;
     letter-spacing: 0.5px;
 }
 
-.user-management-form input {
-    min-width: 200px;
-    height: 45px;
-    padding: 0 15px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    background: rgba(255, 255, 255, 0.9);
-    border-radius: 8px;
-    font-size: 0.95rem;
-    color: #333;
+table tbody tr {
+    border-bottom: 1px solid var(--border-light);
+    transition: var(--transition);
+}
+
+table tbody tr:hover {
+    background: rgba(102, 126, 234, 0.08);
+}
+
+table tbody td {
+    padding: 16px 18px;
+    color: var(--text-dark);
+    font-size: 14px;
+    font-weight: 500;
+}
+
+table tbody td:last-child {
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+table tbody td:last-child button {
+    padding: 8px 16px;
+    font-size: 13px;
+    margin: 4px;
+    min-width: 70px;
+}
+
+/* ============================================
+   MODAL & EDIT FORMS
+   ============================================ */
+
+#editFormContainer {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    animation: slideUp 0.3s ease-out;
+}
+
+#editFormContainer.show {
+    display: flex;
+}
+
+.modal-content {
+    background: var(--bg-secondary);
+    padding: 40px;
+    border-radius: 16px;
+    box-shadow: var(--shadow-lg);
+    max-width: 500px;
+    width: 90%;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(102, 126, 234, 0.1);
+    animation: slideUp 0.4s ease-out;
+}
+
+.modal-content h3 {
+    color: var(--primary-color);
+    text-align: left;
+    margin-bottom: 24px;
+}
+
+.modal-content input {
+    margin-bottom: 16px;
+}
+
+/* ============================================
+   RESPONSIVE & MOBILE
+   ============================================ */
+
+@media (max-width: 768px) {
+    h1 {
+        font-size: 32px;
+        margin: 24px 0 12px 0;
+    }
+
+    h2 {
+        font-size: 24px;
+    }
+
+    .user-management-form,
+    #addUserForm,
+    form {
+        padding: 24px;
+        margin: 24px 12px;
+    }
+
+    table {
+        width: 98%;
+        margin: 20px auto;
+        font-size: 12px;
+    }
+
+    table thead th,
+    table tbody td {
+        padding: 12px 8px;
+    }
+
+    button {
+        padding: 10px 16px;
+        font-size: 13px;
+    }
+
+    div[style*="display: flex"][style*="justify-content: space-between"] {
+        padding: 12px 16px !important;
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+
+    #userProfile {
+        width: 100%;
+        justify-content: flex-end;
+    }
+}
+
+/* ============================================
+   ANIMATIONS & TRANSITIONS
+   ============================================ */
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes scaleIn {
+    from {
+        transform: scale(0.95);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/* Apply animations to page load */
+body {
+    animation: fadeIn 0.6s ease-out;
+}
+
+/* ============================================
+   TEXT & UTILITY CLASSES
+   ============================================ */
+
+.text-center {
+    text-align: center;
+}
+
+.text-right {
+    text-align: right;
+}
+
+.mb-4 {
+    margin-bottom: 16px;
+}
+
+.mt-4 {
+    margin-top: 16px;
+}
+
+.min-h-6 {
+    min-height: 24px;
+}
+
+/* Glass Morphism Effect */
+.glass {
+    background: rgba(26, 26, 46, 0.7);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(102, 126, 234, 0.2);
+    box-shadow: 0 8px 32px 0 rgba(102, 126, 234, 0.15);
+}
+
+/* ============================================
+   SUCCESS/ERROR MESSAGES
+   ============================================ */
+
+.message {
+    padding: 12px 18px;
+    border-radius: 10px;
+    margin: 12px 0;
+    font-weight: 500;
+    animation: slideUp 0.3s ease-out;
+}
+
+.success {
+    background: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%);
+    color: #0d6a3a;
+    border-left: 4px solid #8fd3f4;
+}
+
+.error {
+    background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+    color: #5f3839;
+    border-left: 4px solid #fa709a;
+}
+
+/* ============================================
+   SCROLLBAR STYLING
+   ============================================ */
+
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--light-bg);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--primary-gradient);
+    border-radius: 5px;
+    transition: var(--transition);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--secondary-color);
+}
+
+/* ============================================
+   SPECIAL EFFECTS & ENHANCEMENTS
+   ============================================ */
+
+/* Glow effect on focus */
+button:focus,
+input:focus,
+textarea:focus {
     outline: none;
-    transition: all 0.2s ease;
 }
 
-/* אפקט מקצועי במיקוד (Focus) */
-.user-management-form input:focus {
-    background: #fff;
-    border-color: #FF8C42;
-    box-shadow: 0 0 10px rgba(255, 140, 66, 0.3);
+/* Icon spacing */
+button svg,
+svg {
+    width: 18px;
+    height: 18px;
 }
 
-.user-management-form button {
-    height: 45px;
-    padding: 0 25px;
-    font-size: 1rem;
-    font-weight: bold;
-    cursor: pointer;
-    background: linear-gradient(135deg, #FF8C42, #FFA366);
-    color: white;
-    border: none;
-    border-radius: 8px;
-    transition: transform 0.2s, filter 0.2s;
-    white-space: nowrap;
+/* ============================================
+   TAILWIND COMPATIBILITY
+   ============================================ */
+
+.bg-gray-100 {
+    background: var(--light-bg) !important;
 }
 
-.user-management-form button:hover {
+.bg-white {
+    background: var(--bg-secondary) !important;
+}
+
+.rounded-lg {
+    border-radius: 12px !important;
+}
+
+.shadow-md {
+    box-shadow: var(--shadow) !important;
+}
+
+.border-t-4 {
+    border-top: 4px solid !important;
+}
+
+.border-blue-500 {
+    border-color: var(--primary-color) !important;
+}
+
+.space-y-4 > * + * {
+    margin-top: 16px !important;
+}
+
+.focus\:outline-none:focus {
+    outline: none !important;
+}
+
+.focus\:ring-blue-500:focus {
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2) !important;
+}
+
+.focus\:border-blue-500:focus {
+    border-color: var(--primary-color) !important;
+}
+
+/* ============================================
+   LAYOUT IMPROVEMENTS FOR RTL
+   ============================================ */
+
+[dir="rtl"] {
+    text-align: right;
+}
+
+[dir="rtl"] button,
+[dir="rtl"] input,
+[dir="rtl"] label {
+    text-align: right;
+}
+
+[dir="rtl"] table thead th {
+    text-align: right;
+}
+
+/* ============================================
+   LOADING STATE
+   ============================================ */
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+}
+
+.loading {
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* ============================================
+   DARK THEME - LOGIN & FORM ELEMENTS
+   ============================================ */
+
+:root.dark-theme body {
+    background: var(--light-bg) !important;
+    color: var(--text-dark);
+}
+
+:root.dark-theme body.bg-gray-100 {
+    background: var(--light-bg) !important;
+}
+
+:root.dark-theme div.bg-white {
+    background: var(--bg-secondary) !important;
+    color: var(--text-dark);
+    border-color: var(--border-color);
+}
+
+:root.dark-theme h2.text-gray-800,
+:root.dark-theme .text-gray-800,
+:root.dark-theme .text-gray-700,
+:root.dark-theme .text-gray-500 {
+    color: var(--text-dark) !important;
+}
+
+:root.dark-theme input,
+:root.dark-theme input.bg-white,
+:root.dark-theme input[type="email"],
+:root.dark-theme input[type="password"],
+:root.dark-theme input.text-black {
+    background: var(--bg-secondary) !important;
+    color: var(--text-dark) !important;
+    border-color: var(--border-color) !important;
+}
+
+:root.dark-theme input::placeholder {
+    color: rgba(224, 224, 224, 0.6) !important;
+}
+
+:root.dark-theme input:focus {
+    border-color: var(--primary-color) !important;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.15) !important;
+}
+
+:root.dark-theme hr,
+:root.dark-theme hr.border-gray-300 {
+    border-color: var(--border-color) !important;
+}
+
+:root.dark-theme button.bg-blue-600 {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+}
+
+:root.dark-theme button.bg-blue-600:hover {
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
     transform: translateY(-2px);
-    filter: brightness(1.1);
+}
+
+:root.dark-theme button.bg-red-500 {
+    background: #dc2626 !important;
+    box-shadow: 0 4px 15px rgba(220, 38, 38, 0.4);
+}
+
+:root.dark-theme button.bg-red-500:hover {
+    background: #b91c1c !important;
+    box-shadow: 0 6px 20px rgba(220, 38, 38, 0.5);
+    transform: translateY(-2px);
+}
+
+:root.dark-theme a.bg-red-500 {
+    background: #dc2626 !important;
+    box-shadow: 0 4px 15px rgba(220, 38, 38, 0.4);
+}
+
+:root.dark-theme a.bg-red-500:hover {
+    background: #b91c1c !important;
+    box-shadow: 0 6px 20px rgba(220, 38, 38, 0.5);
+    transform: translateY(-2px);
+}
+
+:root.dark-theme .border-blue-500 {
+    border-color: var(--primary-color) !important;
+}
+
+:root.dark-theme .shadow-md {
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+}
+
+:root.dark-theme div.shadow-md {
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+}
+
+:root.dark-theme #message {
+    color: var(--text-dark);
+}
+
+#message {
+    min-height: 1.5rem;
+}
+
+/* ============================================
+   PRINT STYLES
+   ============================================ */
+
+@media print {
+    body {
+        background: white;
+    }
+
+    table {
+        box-shadow: none;
+        border: 1px solid #ccc;
+    }
 }

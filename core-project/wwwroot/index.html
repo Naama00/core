@@ -9,10 +9,20 @@
 </head>
 
 <body>
-    <a href="user.html" class="custom-link">users:</a>
+    <div class="header-navbar">
+        <div class="header-left">
+            <a href="index.html" class="custom-link active">📚 Books</a>
+            <a href="user.html" class="custom-link">👥 Users</a>
+        </div>
+        <div id="userProfile" class="user-profile-section">
+            <img id="userAvatar" src="" alt="User Avatar" crossOrigin="anonymous" class="user-profile-avatar">
+            <span id="userName" class="user-profile-name"></span>
+            <button onclick="logout()" class="logout-btn">Logout</button>
+        </div>
+    </div>
     
-    <h1>welcome to our library!</h1>
-    <h3>every subscriotion can take 6 books</h3>
+    <h1>Welcome to Our Library</h1>
+    <h3>Each subscription can take 6 books</h3>
   <form onsubmit="event.preventDefault(); addItem();" class="user-management-form">
         <div class="input-group">
     <input type="text" id="bookName" placeholder="Book Name" required>
@@ -22,22 +32,21 @@
         </div>
     <label>Is For Adults? <input type="checkbox" id="IsForAdults"></label>
     <label>Is Borrowed? <input type="checkbox" id="isBorrowed"></label>
-    <button type="submit">Add</button>
+    <button type="submit">Add Book</button>
       
 </form>
    <table id="libraryBooks">
     <thead>
         <tr>
-            <th>id</th>
+            <th>ID</th>
             <th>Name</th>
-            <th>Writer Name</th>
+            <th>Author</th>
             <th>Is Borrowed?</th>
-            <th>Is For Adults?</th>
-            <th>Edit</th>
-            <th>Delete</th>
+            <th>For Adults?</th>
+            <th>ACTIONS</th>
         </tr>
     </thead>
-    <tbody id="books"></tbody> 
+    <tbody id="books"></tbody>
 </table>
 
 <div id="editFormContainer">
@@ -45,12 +54,14 @@
         <h3>Edit Book</h3>
         <form onsubmit="event.preventDefault(); updateBook();">
             <input type="hidden" id="edit-id">
-            <input type="text" id="edit-name" placeholder="Name">
-            <input type="text" id="edit-author" placeholder="Author">
+            <input type="text" id="edit-name" placeholder="Book Name">
+            <input type="text" id="edit-author" placeholder="Author Name">
             <label><input type="checkbox" id="edit-isBorrowed"> Borrowed?</label><br>
             <label><input type="checkbox" id="edit-isForAdults"> For Adults?</label><br><br>
-            <button type="submit">Save Changes</button>
-            <button type="button" onclick="closeEditForm()">Cancel</button>
+            <div style="display: flex; gap: 12px; margin-top: 20px; justify-content: center; flex-wrap: wrap;">
+                <button type="submit" style="min-width: 120px;">💾 Save Changes</button>
+                <button type="button" onclick="closeEditForm()" style="background: #999; min-width: 120px;">❌ Cancel</button>
+            </div>
         </form>
     </div>
 </div>
@@ -58,8 +69,130 @@
 
 
 
+    <script src="js/theme-toggle.js"></script>
+    <!-- SignalR client library from CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.0/signalr.js"></script>
+    <!-- Our SignalR connection script -->
+    <script src="js/signalr.js"></script>
     <script src="js/app.js" asp-append-version="true"></script>
-    <script type="text/javascript">getItems();</script>
+    <script type="text/javascript">
+        // Define functions inline to ensure they're available globally
+        function logout() {
+            console.log('Logout called from index.html');
+            sessionStorage.clear();
+            window.location.href = "login.html";
+        }
+        
+        function displayUserProfile() {
+            console.log('=== displayUserProfile START (index.html) ===');
+            const token = sessionStorage.getItem('jwtToken');
+            const picture = sessionStorage.getItem('userProfilePicture');
+            
+            console.log('Token exists:', !!token);
+            console.log('Token length:', token ? token.length : 0);
+            console.log('Picture from sessionStorage:', picture);
+            console.log('Picture length:', picture ? picture.length : 0);
+            
+            if (!token) {
+                console.log('No token, redirecting to login');
+                window.location.href = "login.html";
+                return;
+            }
+            
+            // Get user name from token
+            const userNameSpan = document.getElementById('userName');
+            let userName = 'User';
+            
+            try {
+                const base64Url = token.split('.')[1];
+                const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+                const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+                    return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+                }).join(''));
+                const decoded = JSON.parse(jsonPayload);
+                
+                // Check if this is a Google login (has givenname and surname claims)
+                const givenName = decoded['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname'];
+                const surName = decoded['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/surname'];
+                
+                if (givenName && surName) {
+                    // Google login - use full name
+                    userName = givenName + ' ' + surName;
+                } else {
+                    // Regular login - use name claim
+                    userName = decoded['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name'] || 'User';
+                }
+                console.log('User name from token:', userName);
+                if (userNameSpan) {
+                    userNameSpan.textContent = userName;
+                }
+            } catch (e) {
+                console.error('Error decoding token:', e);
+                if (userNameSpan) {
+                    userNameSpan.textContent = 'User';
+                }
+            }
+            
+            // Display Google profile picture
+            const img = document.getElementById('userAvatar');
+            console.log('Image element found:', !!img);
+            
+            if (img && picture) {
+                console.log('Picture URL is valid - setting src');
+                console.log('Setting src to:', picture);
+                img.src = picture;
+                img.style.display = 'block';
+                console.log('Image element src after setting:', img.src);
+                console.log('Image element display after setting:', img.style.display);
+                
+                // Add error handler to detect if image fails to load
+                img.onerror = function() {
+                    console.error('Image failed to load:', picture);
+                };
+                
+                img.onload = function() {
+                    console.log('Image loaded successfully');
+                };
+            } else if (!picture) {
+                console.log('Picture NOT available from Google');
+                if (img) {
+                    img.style.display = 'none';
+                    console.log('Hidden image element');
+                }
+            } else {
+                console.log('Image element not found in DOM');
+            }
+            console.log('=== displayUserProfile END ===');
+        }
+        
+        // Display and close edit form
+        function displayEditForm(id) {
+            const book = books.find(b => b.Id === id);
+            if (!book) {
+                alert('ספר לא נמצא');
+                return;
+            }
+            
+            document.getElementById('edit-id').value = book.Id;
+            document.getElementById('edit-name').value = book.Name;
+            document.getElementById('edit-author').value = book.WriterName;
+            document.getElementById('edit-isBorrowed').checked = book.IsBorrowed;
+            document.getElementById('edit-isForAdults').checked = book.IsForAdults;
+            
+            document.getElementById('editFormContainer').classList.add('show');
+        }
+        
+        function closeEditForm() {
+            document.getElementById('editFormContainer').classList.remove('show');
+        }
+        
+        // Initialize
+        window.addEventListener('load', function() {
+            console.log('index.html: Page loaded, initializing...');
+            displayUserProfile();
+            getItems();
+        });
+    </script>
 </body>
 
 </html>
