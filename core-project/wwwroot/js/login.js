@@ -1,4 +1,3 @@
-// המתן עד שה-DOM הטען בעצמו
 console.log("login.js עומס");
 
 const form = document.getElementById('loginForm');

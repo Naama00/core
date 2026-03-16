@@ -1,14 +1,12 @@
 using Microsoft.AspNetCore.Mvc;
 using System.IO;
 using Library.Models;
-// --- הוספת ה-Namespace הנדרש להרשאות ---
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System.Security.Claims;
 using MyApp.Services;
 using Microsoft.AspNetCore.SignalR;
 using Library.Hubs;
-// ----------------------------------------
 
 namespace Library.Controllers
 {
@@ -37,7 +35,6 @@ namespace Library.Controllers
             {
                 var allBooks = _libraryBookService.GetAllBooks();
                 
-                // מנהלים רואים את כל הספרים, משתמשים רילים רואים רק את שלהם
                 if (_currentUserService.IsAdmin)
                 {
                     return Ok(allBooks);
@@ -69,7 +66,6 @@ namespace Library.Controllers
                     return NotFound("Book not found");
                 }
 
-                // מנהלים רואים כל הספרים, משתמשים רילים רואים רק את שלהם
                 if (!_currentUserService.IsAdmin && book.UserId != _currentUserService.UserId)
                 {
                     return Forbid("You don't have access to this book");
@@ -85,7 +81,7 @@ namespace Library.Controllers
         }
 
         [HttpPost]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")] // <--- רק מנהל יכול להוסיף ספרים!
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")] 
         public async Task<ActionResult> Create([FromBody] LibraryBook newBook)
         {
             if (newBook == null || string.IsNullOrEmpty(newBook.Name))
@@ -95,7 +91,6 @@ namespace Library.Controllers
 
             _libraryBookService.AddBook(newBook);
             
-            // שדר את האירוע ללשונות אחרות של אותו משתמש
             if (newBook.UserId > 0)
             {
                 await _hubContext.Clients.All.SendAsync("BookAdded", newBook);
@@ -105,7 +100,7 @@ namespace Library.Controllers
         }
 
         [HttpPut("{id}")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")] // <--- רק מנהל יכול לעדכן ספרים!
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")] 
         public async Task<ActionResult> Update(int id, [FromBody] LibraryBook newBook)
         {
             if (newBook == null || id != newBook.Id)
@@ -121,7 +116,6 @@ namespace Library.Controllers
 
             _libraryBookService.UpdateBook(id, newBook);
             
-            // שדר את האירוע ללשונות אחרות של אותו משתמש
             if (newBook.UserId > 0)
             {
                 await _hubContext.Clients.All.SendAsync("BookUpdated", newBook);
@@ -131,7 +125,7 @@ namespace Library.Controllers
         }
 
         [HttpDelete("{id}")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")] // <--- רק מנהל יכול למחוק ספרים!
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")] 
         public async Task<ActionResult> Delete(int id)
         {
             var book = _libraryBookService.GetBookById(id);
@@ -142,7 +136,6 @@ namespace Library.Controllers
 
             _libraryBookService.DeleteBook(id);
             
-            // שדר את האירוע ללשונות אחרות של אותו משתמש
             if (book.UserId > 0)
             {
                 await _hubContext.Clients.All.SendAsync("BookDeleted", id);

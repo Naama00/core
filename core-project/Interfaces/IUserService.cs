@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using User.Models;
 
-namespace MyApp.Services
+namespace Library.Services
 {
     public interface IUserService
     {

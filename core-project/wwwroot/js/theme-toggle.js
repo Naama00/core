@@ -1,4 +1,3 @@
-// Theme Toggle System
 (function() {
     // Get stored theme or default to light for login page
     const isLoginPage = window.location.pathname.includes('login');

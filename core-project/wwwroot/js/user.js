@@ -58,7 +58,7 @@ async function loadUsers() {
             const uemail = user.email || user.Email || '';
             const upass = user.password || user.Password;
 
-            let actions = `<button onclick="openEditForm(${uid}, '${uname}')">✏️ Edit</button>`;
+            let actions = `<button onclick="openEditForm(${uid}, '${uname}', '${uemail}')">✏️ Edit</button>`;
             const role = sessionStorage.getItem('userRole');
             if (role === 'Admin') {
                 actions += ` <button onclick="deleteUser(${uid})">🗑️ Delete</button>`;
@@ -146,9 +146,10 @@ async function deleteUser(id) {
 }
 
 // פתיחת חלונית העריכה ומילוי נתונים קיימים
-function openEditForm(id, name) {
+function openEditForm(id, name, email) {
     document.getElementById('editUserId').value = id;
     document.getElementById('editUserName').value = name;
+    document.getElementById('editUserEmail').value = email || '';
     document.getElementById('editUserPassword').value = '';
     
     document.getElementById('editFormContainer').classList.add('show');
@@ -163,11 +164,13 @@ function closeEditForm() {
 async function saveUserEdit() {
     const id = document.getElementById('editUserId').value;
     const name = document.getElementById('editUserName').value;
+    const email = document.getElementById('editUserEmail').value;
     const password = document.getElementById('editUserPassword').value;
 
     const updatedUser = {
         Id: parseInt(id),
         Name: name,
+        Email: email,
         Password: password
     };
 

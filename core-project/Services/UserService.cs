@@ -6,19 +6,16 @@ using System.Text.Json;
 using Microsoft.AspNetCore.Hosting;
 using User.Models;
 
-namespace MyApp.Services
+namespace Library.Services
 {
     public class UserService : IUserService
     {
         private readonly string _filePath;
 
-        // הזרקת IWebHostEnvironment מאפשרת לנו למצוא את הנתיב האמיתי של התיקייה
         public UserService(IWebHostEnvironment env)
         {
-            // יצירת נתיב מוחלט לתיקיית Data בשורש הפרויקט
             _filePath = Path.Combine(env.ContentRootPath, "Data", "users.json");
 
-            // וודוא שהתיקייה קיימת כדי למנוע קריסה בשמירה הראשונה
             var directory = Path.GetDirectoryName(_filePath);
             if (directory != null && !Directory.Exists(directory))
             {
@@ -38,13 +35,11 @@ namespace MyApp.Services
                 string json = File.ReadAllText(_filePath);
                 if (string.IsNullOrWhiteSpace(json)) return new List<User.Models.User>();
 
-                // הגדרת PropertyNameCaseInsensitive פותרת בעיות של תאימות בין JS ל-C#
                 var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
                 return JsonSerializer.Deserialize<List<User.Models.User>>(json, options) ?? new List<User.Models.User>();
             }
             catch (Exception ex)
             {
-                // במקרה של שגיאה בקריאת הקובץ, נחזיר רשימה ריקה ולא נגרום לכל השרת לקרוס
                 Console.WriteLine($"Error reading JSON: {ex.Message}");
                 return new List<User.Models.User>();
             }
@@ -60,14 +55,12 @@ namespace MyApp.Services
         public User.Models.User? Authenticate(string name, string password)
         {
             var users = LoadData();
-            // חיפוש משתמש לפי שם וסיסמה בלבד
             return users.FirstOrDefault(u => u.Name == name && u.Password == password);
         }
 
         public User.Models.User? AuthenticateByEmail(string email, string password)
         {
             var users = LoadData();
-            // חיפוש משתמש לפי אימייל וסיסמה
             return users.FirstOrDefault(u => !string.IsNullOrEmpty(u.Email) && u.Email == email && u.Password == password);
         }
         

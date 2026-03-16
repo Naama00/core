@@ -1,6 +1,3 @@
-// SignalR Client for Library Notifications
-// תחבור ללשונות אחרות של אותו משתמש כאשר מוסיפים/עדכנים/מוחקים ספרים
-
 let connection = null;
 
 // יצור קשר עם LibraryHub

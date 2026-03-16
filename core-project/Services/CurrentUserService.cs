@@ -3,7 +3,7 @@ using System.Security.Claims;
 using MyApp.Services;
 using User.Models;
 
-namespace MyApp.Services
+namespace Library.Services
 {
     public class CurrentUserService : ICurrentUserService
     {
@@ -60,7 +60,6 @@ namespace MyApp.Services
                 if (UserId == 0)
                     return null;
 
-                // Caching the user to avoid multiple database hits
                 if (_cachedUser == null || _cachedUser.Id != UserId)
                 {
                     _cachedUser = _userService.GetById(UserId);

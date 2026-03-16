@@ -4,16 +4,15 @@ using System.Linq;
 using System.Text.Json;
 using Library.Models;
 
+namespace Library.Services
+{
 public class LibraryBookService : ILibraryBookService
 {
     private readonly string _filePath = "Data/books.json";
-
-    // פונקציית עזר לטעינת נתונים
     private List<LibraryBook> LoadData()
     {
         if (!File.Exists(_filePath))
         {
-            // אם הקובץ לא קיים, ניצור אותו עם נתוני ברירת המחדל שלך
             var defaultBooks = new List<LibraryBook>
             {
                 new LibraryBook{Id=1, Name="Assasin", WriterName="Sappir", IsBorrowed=true, IsForAdults=true},
@@ -30,7 +29,6 @@ public class LibraryBookService : ILibraryBookService
         return JsonSerializer.Deserialize<List<LibraryBook>>(json) ?? new List<LibraryBook>();
     }
 
-    // פונקציית עזר לשמירת נתונים
     private void SaveData(List<LibraryBook> books)
     {
         var options = new JsonSerializerOptions { WriteIndented = true };
@@ -56,7 +54,7 @@ public class LibraryBookService : ILibraryBookService
         var index = booksList.FindIndex(b => b.Id == id);
         if (index != -1)
         {
-            book.Id = id; // מוודאים שה-ID נשאר זהה
+            book.Id = id; 
             booksList[index] = book;
             SaveData(booksList);
         }
@@ -86,4 +84,5 @@ public class LibraryBookService : ILibraryBookService
             SaveData(booksList);
         }
     }
+}
 }

@@ -1,7 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
-using User.Models; // המודל שלך
-using MyApp.Services; // ה-Namespace שבו נמצא השירות שלך
+using User.Models;
+using MyApp.Services;
+using Library.Services;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -28,7 +29,6 @@ namespace Library.Controllers
                 return BadRequest("אימייל וסיסמה נדרשים");
             }
 
-            // 1. בדיקת משתמש מול ה-JSON
             var user = _userService.AuthenticateByEmail(loginModel.Email, loginModel.Password);
 
             if (user == null)
@@ -36,20 +36,16 @@ namespace Library.Controllers
                 return Unauthorized("אימייל או סיסמה שגויים");
             }
 
-            // 2. יצירת ה-Claims (מידע על המשתמש)
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Name, user.Name),
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                // הוספת התפקיד (Admin/User) לטוקן
                 new Claim(ClaimTypes.Role, user.Role) 
             };
 
-            // 3. יצירת הטוקן באמצעות השירות של הספריה
             var token = LibraryTokenService.GetToken(claims);
             var tokenString = LibraryTokenService.WriteToken(token);
 
-            // מחזירים את הטוקן למשתמש
             return Ok(new { Token = tokenString, Username = user.Name, Role = user.Role });
         }
 
@@ -72,7 +68,6 @@ namespace Library.Controllers
             if (claims == null)
                 return Redirect("/login.html?error=no_claims");
 
-            // הדפסת כל ה-Claims לצפייה במה שמגיע מ-Google
             Console.WriteLine("=== Google Claims ===");
             foreach (var claim in claims)
             {
@@ -80,16 +75,11 @@ namespace Library.Controllers
             }
             Console.WriteLine("===================");
 
-            // חילוץ מידע מ-Google
             var email = claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
             var name = claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
             var googleId = claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
-            
-            // Extract givenname and surname from Google
             var givenName = claims.FirstOrDefault(c => c.Type == ClaimTypes.GivenName)?.Value;
             var surName = claims.FirstOrDefault(c => c.Type == ClaimTypes.Surname)?.Value;
-            
-            // Search for picture claim
             var profilePicture = claims.FirstOrDefault(c => c.Type == "picture")?.Value;
 
             Console.WriteLine("=== Google Response ===");
@@ -103,19 +93,17 @@ namespace Library.Controllers
             if (string.IsNullOrEmpty(name))
                 return Redirect("/login.html?error=no_name");
 
-            // בדיקה אם המשתמש כבר קיים במערכת (חיפוש לפי אימייל)
             var existingUser = _userService.GetAll()
                 .FirstOrDefault(u => !string.IsNullOrEmpty(email) && u.Email == email);
             
             User.Models.User user;
             if (existingUser == null)
             {
-                // יצירת משתמש חדש מ-Google
                 user = new User.Models.User
                 {
                     Name = name,
                     Email = email,
-                    Password = googleId, // שמירת Google ID כ"סיסמה"
+                    Password = googleId, 
                     Role = "User",
                     ProfilePictureUrl = profilePicture
                 };
@@ -124,12 +112,10 @@ namespace Library.Controllers
             else
             {
                 user = existingUser;
-                // עדכן את האימייל אם הוא השתנה
                 if (!string.IsNullOrEmpty(email) && user.Email != email)
                 {
                     user.Email = email;
                 }
-                // עדכן את תמונת הפרופיל
                 if (!string.IsNullOrEmpty(profilePicture))
                 {
                     user.ProfilePictureUrl = profilePicture;
@@ -137,7 +123,6 @@ namespace Library.Controllers
                 _userService.Update(user.Id, user);
             }
 
-            // יצירת ה-Claims שלנו עבור JWT
             var jwtClaims = new List<Claim>
             {
                 new Claim(ClaimTypes.Name, user.Name),
@@ -145,7 +130,6 @@ namespace Library.Controllers
                 new Claim(ClaimTypes.Role, user.Role)
             };
             
-            // Add Google name parts if available
             if (!string.IsNullOrEmpty(givenName))
             {
                 jwtClaims.Add(new Claim(ClaimTypes.GivenName, givenName));
@@ -157,25 +141,20 @@ namespace Library.Controllers
                 Console.WriteLine($"Added surname claim to JWT: {surName}");
             }
             
-            // Add picture URL as a claim if available
             if (!string.IsNullOrEmpty(user.ProfilePictureUrl))
             {
                 jwtClaims.Add(new Claim("picture", user.ProfilePictureUrl));
                 Console.WriteLine($"Added picture claim to JWT: {user.ProfilePictureUrl}");
             }
 
-            // יצירת JWT טוקן
             var token = LibraryTokenService.GetToken(jwtClaims);
             var tokenString = LibraryTokenService.WriteToken(token);
 
-            // הפניה חזרה לdaf login.html עם הטוקן ב-query string
-            // The picture will now be in the JWT token itself 
             Console.WriteLine($"JWT token created with picture claim (if available)");
             return Redirect($"/login.html?token={tokenString}&role={user.Role}");
         }
     }
 
-    // DTO לבקשת התחברות
     public class LoginRequest
     {
         public string Email { get; set; }

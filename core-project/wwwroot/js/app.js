@@ -1,27 +1,25 @@
 const uri = '/LibraryBook';
 let books = [];
 
-// --- פונקציית עזר להוספת הטוקן ל-Headers ---
 function getAuthHeaders() {
     const token = sessionStorage.getItem('jwtToken');
     return {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}` // שליחת הטוקן
+        'Authorization': `Bearer ${token}` 
     };
 }
-// -------------------------------------------
 
 async function getItems() {
     console.log("מנסה למשוך נתונים מהשרת...");
     try {
         const response = await fetch(uri, {
             method: 'GET',
-            headers: getAuthHeaders() // הוספת Headers לקריאה
+            headers: getAuthHeaders() 
         });
 
         if (response.status === 401) {
             alert("לא מחובר! אנא התחבר מחדש.");
-            window.location.href = "login.html"; // חזרה לדף התחברות
+            window.location.href = "login.html";
             return;
         }
 
@@ -34,7 +32,6 @@ async function getItems() {
 }
 
 async function addItem() {
-    // מומלץ לתפוס אלמנטים פעם אחת מחוץ לפונקציה, אבל זה בסדר
     const nameInput = document.getElementById('bookName');
     const authorInput = document.getElementById('authorName');
     const borrowedInput = document.getElementById('isBorrowed');
@@ -49,7 +46,7 @@ async function addItem() {
 
     const response = await fetch(uri, {
         method: 'POST',
-        headers: getAuthHeaders(), // שימוש בפונקציית העזר
+        headers: getAuthHeaders(), 
         body: JSON.stringify(item)
     });
 
@@ -67,7 +64,6 @@ function _displayItems(data) {
     const tbody = document.getElementById('books');
     tbody.innerHTML = '';
     
-    // קבלת התפקיד כדי לדעת אם להציג כפתורי עריכה/מחיקה
     const role = sessionStorage.getItem('userRole'); 
 
     data.forEach(item => {
@@ -79,10 +75,8 @@ function _displayItems(data) {
         tr.insertCell(3).innerText = item.IsBorrowed ? 'Yes' : 'No';
         tr.insertCell(4).innerText = item.IsForAdults ? 'Yes' : 'No';
 
-        // הוספת כפתורים רק אם המשתמש הוא מנהל
         let tdActions = tr.insertCell(5);
         if (role === 'Admin') {
-            // שימוש ב-template literals ליצירת הכפתורים
             tdActions.innerHTML = `
                 <button onclick="displayEditForm(${item.Id})">✏️ Edit</button>
                 <button onclick="deleteItem(${item.Id})">🗑️ Delete</button>
@@ -102,7 +96,7 @@ async function deleteItem(id) {
     try {
         const response = await fetch(`${uri}/${id}`, {
             method: 'DELETE',
-            headers: getAuthHeaders() // הוספת הטוקן
+            headers: getAuthHeaders() 
         });
 
         if (response.ok) {
@@ -131,7 +125,7 @@ async function updateBook() {
     try {
         const response = await fetch(`${uri}/${itemId}`, {
             method: 'PUT',
-            headers: getAuthHeaders(), // הוספת הטוקן
+            headers: getAuthHeaders(), 
             body: JSON.stringify(item)
         });
 
@@ -175,13 +169,11 @@ function clearAddForm() {
     document.getElementById('IsForAdults').checked = false;
 }
 
-// טעינת הנתונים כשדף הספרייה נפתח
 document.addEventListener('DOMContentLoaded', function() {
     getItems();
     displayUserProfile();
 });
 
-// תצוגת פרופיל המשתמש
 function displayUserProfile() {
     const token = sessionStorage.getItem('jwtToken');
     const picture = sessionStorage.getItem('userProfilePicture');
@@ -195,8 +187,7 @@ function displayUserProfile() {
         window.location.href = "login.html";
         return;
     }
-    
-    // קחה שם המשתמש והצגה
+
     const userNameSpan = document.getElementById('userName');
     let userName = 'User';
     
@@ -219,7 +210,6 @@ function displayUserProfile() {
         }
     }
     
-    // הצגת תמונת הפרופיל אם קיימת
     const avatarContainer = document.getElementById('userProfile');
     console.log('Avatar container found:', !!avatarContainer);
     
@@ -240,7 +230,6 @@ function displayUserProfile() {
     }
 }
 
-// Create an avatar with initials
 function createInitialsAvatar(name, parentElement) {
     const initials = name
         .split(' ')
@@ -251,13 +240,11 @@ function createInitialsAvatar(name, parentElement) {
     const colors = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#FFA07A', '#98D8C8', '#F38181'];
     const bgColor = colors[Math.floor(Math.random() * colors.length)];
     
-    // Find or remove old avatar
     const oldAvatar = parentElement.querySelector('img, svg');
     if (oldAvatar) {
         oldAvatar.remove();
     }
     
-    // Create SVG avatar
     const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
     svg.setAttribute('width', '40');
     svg.setAttribute('height', '40');
@@ -283,7 +270,6 @@ function createInitialsAvatar(name, parentElement) {
     svg.appendChild(rect);
     svg.appendChild(text);
     
-    // Insert before the userName span
     const userNameSpan = parentElement.querySelector('span');
     if (userNameSpan) {
         userNameSpan.parentNode.insertBefore(svg, userNameSpan);
@@ -292,8 +278,6 @@ function createInitialsAvatar(name, parentElement) {
     }
 }
 
-
-// Logout function
 function logout() {
     console.log('Logout called');
     sessionStorage.clear();

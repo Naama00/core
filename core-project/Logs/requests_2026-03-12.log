@@ -1,0 +1,9 @@
+[2026-03-12 16:29:00.563] | GET | Unknown/Unknown | User: נעמה וויג | Status: 404 | Duration: 0ms
+[2026-03-12 16:29:02.422] | GET | Auth/LoginGoogle | User: נעמה וויג | Status: 302 | Duration: 106ms
+[2026-03-12 16:29:09.503] | GET | Auth/GoogleResponse | User: נעמה וויג | Status: 302 | Duration: 125ms
+[2026-03-12 16:29:10.148] | POST | Unknown/Unknown | User: נעמה וויג | Status: 200 | Duration: 5ms
+[2026-03-12 16:29:10.264] | GET | LibraryBook/GetAll | User: Naama weig | Status: 200 | Duration: 21ms
+[2026-03-12 16:29:10.362] | GET | LibraryBook/GetAll | User: Naama weig | Status: 200 | Duration: 2ms
+[2026-03-12 16:29:20.331] | GET | Users/GetAll | User: Naama weig | Status: 200 | Duration: 12ms
+[2026-03-12 16:29:10.167] | GET | Unknown/Unknown | User: נעמה וויג | Status: 101 | Duration: 10200ms
+[2026-03-12 16:29:20.404] | GET | Users/GetAll | User: Naama weig | Status: 200 | Duration: 1ms

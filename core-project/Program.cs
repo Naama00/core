@@ -1,11 +1,9 @@
 using Library.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
+using Library.Services;
 using MyApp.Services;
 using Library.Hubs;
-using Library.Middleware;
-using Library.Services;
-using System.Threading.Channels;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
@@ -13,8 +11,18 @@ using Microsoft.AspNetCore.Authentication.OAuth;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Security.Claims;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Configure Serilog
+builder.Host.UseSerilog((context, services, configuration) =>
+    configuration
+        .ReadFrom.Configuration(context.Configuration)
+        .ReadFrom.Services(services)
+        .Enrich.FromLogContext()
+        .Enrich.WithProperty("Application", "LibraryCore")
+);
 
 // ... (שאר ההגדרות של ה-Services נשארות אותו דבר) ...
 builder.Services.AddCors(options =>
@@ -36,11 +44,6 @@ builder.Services.AddControllers()
 
 // הוסף SignalR
 builder.Services.AddSignalR();
-
-// הוסף Log Queue ו-Background Service
-var logChannel = Channel.CreateUnbounded<LogEntry>();
-builder.Services.AddSingleton(logChannel);
-builder.Services.AddHostedService<LogWriterBackgroundService>();
 
 builder.Services.AddSingleton<ILibraryBookService, LibraryBookService>();
 builder.Services.AddScoped<IUserService, UserService>();
@@ -150,11 +153,14 @@ app.UseCors("AllowAll");
 
 app.UseHttpsRedirection();
 
+// Use Serilog request logging middleware
+app.UseSerilogRequestLogging(options =>
+{
+    options.MessageTemplate = "{RemoteIPAddress} {RequestMethod} {RequestPath} responded {StatusCode} in {Elapsed:0.0000} ms";
+});
+
 app.UseAuthentication(); 
 app.UseAuthorization();
-
-// הוסף Request Logging Middleware
-app.UseMiddleware<RequestLoggingMiddleware>();
 
 app.MapControllers();
 
